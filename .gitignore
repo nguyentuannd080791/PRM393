@@ -1,0 +1,78 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder
+.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+**/.dart_tool/
+.flutter-plugins-dependencies
+**/.flutter-plugins-dependencies
+.pub-cache/
+**/.pub-cache/
+.pub/
+**/.pub/
+build/
+**/build/
+coverage/
+**/coverage/
+
+# Symbolication related
+app.*.symbols
+app.*.map.json
+
+# Android Studio artifacts
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+
+# Widget Preview
+.widget_preview/
+
+# --- USER-REQUESTED IGNORES ---
+# 1. .agents
+.agents/
+
+# 2. .MD ben ngoai cung
+/*.md
+/*.MD
+
+# 3. Toan bo backend chua can commit
+backend/
+
+# 4. Chi commit frontend lib/core va authentication
+frontend/lib/features/feed/
+frontend/lib/features/friends/
+frontend/lib/features/menu/
+frontend/lib/features/notifications/
+frontend/lib/features/post/
+frontend/lib/features/profile/
+
+frontend/lib/data/repositories/feed_repository.dart
+frontend/lib/data/repositories/friend_repository.dart
+frontend/lib/data/repositories/interaction_repository.dart
+frontend/lib/data/repositories/notification_repository.dart
+frontend/lib/data/repositories/post_repository.dart
+frontend/lib/data/repositories/profile_repository.dart
+
+frontend/test/
