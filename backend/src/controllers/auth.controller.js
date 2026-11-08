@@ -1,0 +1,56 @@
+// backend/src/controllers/auth.controller.js
+const authService = require('../services/auth.service');
+const { successResponse } = require('../utils/response');
+
+async function register(req, res, next) {
+  try {
+    const data = await authService.registerUser(req.body);
+    return successResponse(res, data, 201, 'User registered successfully');
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function login(req, res, next) {
+  try {
+    const data = await authService.loginUser(req.body);
+    return successResponse(res, data, 200);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function logout(req, res, next) {
+  try {
+    // Session invalidated on client by clearing token
+    return successResponse(res, null, 200, 'Logged out successfully');
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function forgotPassword(req, res, next) {
+  try {
+    const result = await authService.forgotPassword(req.body);
+    return successResponse(res, null, 200, result.message);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function getMe(req, res, next) {
+  try {
+    const user = await authService.getCurrentUserProfile(req.user.userId);
+    return successResponse(res, { user }, 200);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = {
+  register,
+  login,
+  logout,
+  forgotPassword,
+  getMe,
+};

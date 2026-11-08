@@ -57,8 +57,33 @@ app.*.map.json
 /*.md
 /*.MD
 
-# 3. Toan bo backend chua can commit
-backend/
+# 3. Backend: Chi commit base co so du lieu va authentication
+backend/node_modules/
+backend/.env
+backend/.pgdata/
+
+backend/src/controllers/feed.controller.js
+backend/src/controllers/friend.controller.js
+backend/src/controllers/interaction.controller.js
+backend/src/controllers/notification.controller.js
+backend/src/controllers/post.controller.js
+backend/src/controllers/user.controller.js
+
+backend/src/routes/feed.routes.js
+backend/src/routes/friend.routes.js
+backend/src/routes/interaction.routes.js
+backend/src/routes/notification.routes.js
+backend/src/routes/post.routes.js
+backend/src/routes/user.routes.js
+
+backend/src/services/feed.service.js
+backend/src/services/friend.service.js
+backend/src/services/interaction.service.js
+backend/src/services/notification.service.js
+backend/src/services/post.service.js
+backend/src/services/user.service.js
+
+backend/tests/
 
 # 4. Chi commit frontend lib/core va authentication
 frontend/lib/features/feed/
