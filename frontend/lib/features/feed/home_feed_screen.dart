@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:clone_facebook/app/route_names.dart';
 import 'package:clone_facebook/core/widgets/loading_view.dart';
+import 'package:clone_facebook/core/widgets/user_avatar.dart';
+import 'package:clone_facebook/features/auth/auth_provider.dart';
 import 'package:clone_facebook/features/friends/widgets/friends_ui.dart';
 
 import 'feed_provider.dart';
@@ -85,24 +87,48 @@ class _HomeFeedScreenState extends ConsumerState<HomeFeedScreen> {
   }
 }
 
-class _Composer extends StatelessWidget {
+class _Composer extends ConsumerWidget {
   const _Composer();
   @override
-  Widget build(BuildContext context) => SocialCard(
-    padding: EdgeInsets.zero,
-    child: ListTile(
-      onTap: () => context.push(AppRoutePaths.createPost),
-      leading: const Icon(Icons.edit_outlined, color: socialBlue),
-      title: const Text(
-        "What's on your mind?",
-        style: TextStyle(color: socialMuted),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final name = ref.watch(currentUserProvider)?.fullName ?? '';
+    return SocialCard(
+      padding: const EdgeInsets.all(14),
+      child: Row(
+        children: [
+          UserAvatar(name, radius: 19),
+          const SizedBox(width: 12),
+          Expanded(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(24),
+              onTap: () => context.push(AppRoutePaths.createPost),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 11,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF2F4F7),
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: const Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "What's on your mind?",
+                        style: TextStyle(color: socialMuted),
+                      ),
+                    ),
+                    Icon(Icons.edit_note, size: 20, color: socialMuted),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
-      trailing: const Text(
-        'Create Post',
-        style: TextStyle(color: socialBlue, fontWeight: FontWeight.w600),
-      ),
-    ),
-  );
+    );
+  }
 }
 
 class _Message extends StatelessWidget {

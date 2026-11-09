@@ -130,14 +130,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Learning Flutter with friends.'), findsOneWidget);
     expect(find.text('Bob Tran'), findsOneWidget);
-    expect(find.text('2'), findsOneWidget);
+    expect(find.text('2 Likes · 1 Comment'), findsOneWidget);
 
     final like = find.byTooltip('Like');
     await tester.tap(like);
     await tester.tap(like); // second tap while the first is in flight
     await tester.pumpAndSettle();
     expect(repo.likeCalls, 1);
-    expect(find.text('3'), findsOneWidget);
+    expect(find.text('3 Likes · 1 Comment'), findsOneWidget);
     expect(find.byTooltip('Unlike'), findsOneWidget);
   });
 
@@ -164,7 +164,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Learning Flutter with friends.'), findsOneWidget);
-    await tester.tap(find.text('2 likes'));
+    await tester.tap(find.text('2 Likes'));
     await tester.pumpAndSettle();
     expect(find.text('Carl Le'), findsOneWidget);
   });

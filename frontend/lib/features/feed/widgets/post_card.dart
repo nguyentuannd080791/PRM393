@@ -20,16 +20,24 @@ class PostHeader extends StatelessWidget {
         UserAvatar(post.author.name, radius: 20),
         const SizedBox(width: 12),
         Expanded(
-          child: Text(
-            post.author.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                post.author.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                ),
+              ),
+              Text(
+                requestTime(post.createdAt),
+                style: const TextStyle(color: socialMuted, fontSize: 12),
+              ),
+            ],
           ),
-        ),
-        Text(
-          requestTime(post.createdAt),
-          style: const TextStyle(color: socialMuted, fontSize: 12),
         ),
       ],
     ),
@@ -83,14 +91,14 @@ class PostActionRow extends ConsumerWidget {
       children: [
         button(
           post.likedByMe ? Icons.thumb_up : Icons.thumb_up_outlined,
-          '${post.likeCount}',
+          post.likedByMe ? 'Liked' : 'Like',
           busy ? null : () => run(() => actions.like(post)),
           active: post.likedByMe,
           tooltip: post.likedByMe ? 'Unlike' : 'Like',
         ),
         button(
           Icons.mode_comment_outlined,
-          '${post.commentCount}',
+          'Comment',
           commentsPath == null
               ? null
               : () => context.push(commentsPath(post.id)),
@@ -132,8 +140,17 @@ class PostCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 8),
-        const Divider(height: 1),
+        const SizedBox(height: 12),
+        Text(
+          '${post.likeCount} ${post.likeCount == 1 ? 'Like' : 'Likes'} · '
+          '${post.commentCount} ${post.commentCount == 1 ? 'Comment' : 'Comments'}',
+          style: const TextStyle(
+            color: socialMuted,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 4),
         PostActionRow(post),
       ],
     ),
