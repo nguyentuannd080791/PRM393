@@ -78,10 +78,11 @@ class PostActionRow extends ConsumerWidget {
         child: TextButton.icon(
           onPressed: onTap,
           icon: Icon(icon, size: 20),
-          label: Text(label),
+          label: FittedBox(fit: BoxFit.scaleDown, child: Text(label)),
           style: TextButton.styleFrom(
             foregroundColor: active ? socialBlue : socialMuted,
             minimumSize: const Size(0, 44),
+            padding: const EdgeInsets.symmetric(horizontal: 6),
           ),
         ),
       ),
