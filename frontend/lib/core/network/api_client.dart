@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io' show Platform;
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:clone_facebook/features/auth/presentation/providers/auth_state_provider.dart';
+
 import 'token_storage.dart';
 
 /// Exception thrown on REST API failure.
@@ -24,27 +26,46 @@ ApiException mapDioException(DioException error) {
     final statusCode = error.response?.statusCode;
     final data = error.response?.data;
     if (data is Map<String, dynamic> && data['message'] != null) {
-      return ApiException(data['message'].toString(), statusCode, data['details']);
+      return ApiException(
+        data['message'].toString(),
+        statusCode,
+        data['details'],
+      );
     }
     if (statusCode == 401) {
-      return ApiException('Session expired or unauthorized. Please log in again.', statusCode);
+      return ApiException(
+        'Session expired or unauthorized. Please log in again.',
+        statusCode,
+      );
     }
     if (statusCode == 403) {
-      return ApiException('You do not have permission to perform this action.', statusCode);
+      return ApiException(
+        'You do not have permission to perform this action.',
+        statusCode,
+      );
     }
     if (statusCode == 404) {
       return ApiException('The requested resource was not found.', statusCode);
     }
     if (statusCode == 429) {
-      return ApiException('Too many attempts. Try again in 5 minutes.', statusCode);
+      return ApiException(
+        'Too many attempts. Try again in 5 minutes.',
+        statusCode,
+      );
     }
-    return ApiException('Server error ($statusCode). Please try again.', statusCode);
+    return ApiException(
+      'Server error ($statusCode). Please try again.',
+      statusCode,
+    );
   }
-  if (error.type == DioExceptionType.connectionTimeout || error.type == DioExceptionType.receiveTimeout) {
+  if (error.type == DioExceptionType.connectionTimeout ||
+      error.type == DioExceptionType.receiveTimeout) {
     return ApiException('Connection timed out. Please check your network.');
   }
   if (error.type == DioExceptionType.connectionError) {
-    return ApiException('Could not connect to the server. Please check your connection.');
+    return ApiException(
+      'Could not connect to the server. Please check your connection.',
+    );
   }
   return ApiException(error.message ?? 'An unexpected network error occurred.');
 }
@@ -109,23 +130,25 @@ class ApiClient {
     TokenStorage? tokenStorage,
     Dio? customDio,
     this.onSessionExpired,
-  })  : tokenStorage = tokenStorage ?? TokenStorage(),
-        dio = customDio ??
-            Dio(
-              BaseOptions(
-                baseUrl: baseUrl ?? defaultBaseUrl,
-                connectTimeout: const Duration(seconds: 10),
-                receiveTimeout: const Duration(seconds: 10),
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json',
-                },
-              ),
-            ) {
+  }) : tokenStorage = tokenStorage ?? TokenStorage(),
+       dio =
+           customDio ??
+           Dio(
+             BaseOptions(
+               baseUrl: baseUrl ?? defaultBaseUrl,
+               connectTimeout: const Duration(seconds: 10),
+               receiveTimeout: const Duration(seconds: 10),
+               headers: {
+                 'Content-Type': 'application/json',
+                 'Accept': 'application/json',
+               },
+             ),
+           ) {
     dio.interceptors.add(
       AuthInterceptor(
         this.tokenStorage,
-        onSessionExpired: () => (onSessionExpired ?? onGlobalSessionExpired)?.call(),
+        onSessionExpired: () =>
+            (onSessionExpired ?? onGlobalSessionExpired)?.call(),
       ),
     );
     if (testAdapter != null) {
@@ -200,10 +223,19 @@ class ApiClient {
     Options? options,
   }) async {
     if (testAdapter != null) {
-      return _directFetch<T>('GET', path, queryParameters: queryParameters, options: options);
+      return _directFetch<T>(
+        'GET',
+        path,
+        queryParameters: queryParameters,
+        options: options,
+      );
     }
     try {
-      return await dio.get<T>(path, queryParameters: queryParameters, options: options);
+      return await dio.get<T>(
+        path,
+        queryParameters: queryParameters,
+        options: options,
+      );
     } on DioException catch (e) {
       throw mapDioException(e);
     }
@@ -216,10 +248,21 @@ class ApiClient {
     Options? options,
   }) async {
     if (testAdapter != null) {
-      return _directFetch<T>('POST', path, data: data, queryParameters: queryParameters, options: options);
+      return _directFetch<T>(
+        'POST',
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
     }
     try {
-      return await dio.post<T>(path, data: data, queryParameters: queryParameters, options: options);
+      return await dio.post<T>(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
     } on DioException catch (e) {
       throw mapDioException(e);
     }
@@ -232,10 +275,21 @@ class ApiClient {
     Options? options,
   }) async {
     if (testAdapter != null) {
-      return _directFetch<T>('PUT', path, data: data, queryParameters: queryParameters, options: options);
+      return _directFetch<T>(
+        'PUT',
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
     }
     try {
-      return await dio.put<T>(path, data: data, queryParameters: queryParameters, options: options);
+      return await dio.put<T>(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
     } on DioException catch (e) {
       throw mapDioException(e);
     }
@@ -248,10 +302,21 @@ class ApiClient {
     Options? options,
   }) async {
     if (testAdapter != null) {
-      return _directFetch<T>('DELETE', path, data: data, queryParameters: queryParameters, options: options);
+      return _directFetch<T>(
+        'DELETE',
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
     }
     try {
-      return await dio.delete<T>(path, data: data, queryParameters: queryParameters, options: options);
+      return await dio.delete<T>(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
     } on DioException catch (e) {
       throw mapDioException(e);
     }
@@ -264,10 +329,21 @@ class ApiClient {
     Options? options,
   }) async {
     if (testAdapter != null) {
-      return _directFetch<T>('PATCH', path, data: data, queryParameters: queryParameters, options: options);
+      return _directFetch<T>(
+        'PATCH',
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
     }
     try {
-      return await dio.patch<T>(path, data: data, queryParameters: queryParameters, options: options);
+      return await dio.patch<T>(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
     } on DioException catch (e) {
       throw mapDioException(e);
     }
