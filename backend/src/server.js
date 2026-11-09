@@ -15,6 +15,7 @@ async function startServer() {
     console.log('[DB] Connecting to MongoDB...');
     const connInfo = await db.testConnection();
     await require('./config/member4_indexes').ensureMember4Indexes();
+    await require('./config/member1_indexes').ensureMember1Indexes();
     console.log(`[DB] Connected to database "${connInfo.database}" on ${connInfo.host}:${connInfo.port} (${connInfo.version})`);
 
     // 2. Start HTTP Server Listener

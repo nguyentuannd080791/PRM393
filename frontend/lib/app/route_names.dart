@@ -17,6 +17,8 @@ abstract class AppRoutePaths {
 
   // Sub-routes & Full-screen Modals
   static const createPost = '/post/create';
+  static const postDetail = '/post/:id';
+  static String postDetailPath(String id) => '/post/$id';
   static const editPost = '/post/:id/edit';
   static String editPostPath(String id) => '/post/$id/edit';
 
@@ -44,6 +46,7 @@ abstract class AppRouteNames {
   static const menu = 'menu';
 
   static const createPost = 'createPost';
+  static const postDetail = 'postDetail';
   static const editPost = 'editPost';
   static const profileEdit = 'profileEdit';
   static const profile = 'profile';

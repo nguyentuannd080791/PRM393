@@ -9,6 +9,7 @@
     "db:init": "node scripts/init_db.js",
     "test": "node --test tests/*.test.js",
     "test:member4": "node --test tests/member4.integration.test.js",
+    "test:member1": "node --test tests/member1.integration.test.js",
     "seed:member4": "node scripts/seed_member4.js"
   },
   "dependencies": {

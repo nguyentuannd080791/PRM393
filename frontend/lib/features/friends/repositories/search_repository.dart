@@ -41,7 +41,7 @@ final searchRepositoryProvider = Provider<SearchRepository>(
   (ref) => ApiSearchRepository(ref.watch(apiClientProvider)),
 );
 
-/// Member 1 can supply the existing Post Detail route without adding a new page here.
+/// Search results open Member 1's Post Detail (SCR02).
 final postDetailPathBuilderProvider = Provider<String Function(String)?>(
-  (ref) => null,
+  (ref) => (id) => '/post/$id',
 );

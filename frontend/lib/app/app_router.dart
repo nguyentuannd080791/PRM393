@@ -19,6 +19,7 @@ import 'package:clone_facebook/features/friends/screens/search_screen.dart';
 import 'package:clone_facebook/features/friends/screens/friend_requests_screen.dart';
 
 import 'package:clone_facebook/features/feed/notifications_screen.dart';
+import 'package:clone_facebook/features/feed/post_detail_screen.dart';
 import 'package:clone_facebook/features/profile/account_settings_screen.dart';
 
 import 'package:clone_facebook/features/posts/post_editor_screen.dart';
@@ -206,6 +207,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: AppRouteNames.createPost,
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const CreatePostPage(),
+      ),
+      // '/post/create' is declared above, so ':id' never captures it.
+      GoRoute(
+        path: AppRoutePaths.postDetail,
+        name: AppRouteNames.postDetail,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) =>
+            PostDetailScreen(postId: state.pathParameters['id'] ?? ''),
       ),
       GoRoute(
         path: AppRoutePaths.editPost,

@@ -9,7 +9,7 @@ README này giúp thành viên mới chạy dự án, tìm đúng phần code c�
 | Phụ trách | Màn hình | Thư mục Flutter | Tình trạng |
 | --- | --- | --- | --- |
 | Chung | Login, Register, phiên đăng nhập | `features/auth/` | Có code authentication và API |
-| Member 1 | Home Feed, Post Detail, Notifications | `features/feed/` | Có giao diện/điểm tích hợp; tính năng đầy đủ đang chờ thành viên phụ trách |
+| Member 1 | Home Feed, Post Detail, Notifications | `features/feed/` | Đã nối Riverpod → API → MongoDB, có kiểm thử (xem `docs/member1.md`); nút Comment chờ Member 3 |
 | Member 2 | Post Editor, My Posts, Post Insights | `features/posts/` | Có giao diện/khung tích hợp; chưa hoàn thành nghiệp vụ quản lý bài viết |
 | Member 3 | Comments, Liked Posts, Saved Posts | `features/interactions/` | Khung tích hợp |
 | Member 4 | Search, Friend Requests, Friend List | `features/friends/` | Đã nối Riverpod → API → MongoDB, có kiểm thử |
