@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "tertiary-fixed": "#88f8c4", "background": "#f8f9ff", "surface-bright": "#f8f9ff", "surface-container": "#e6eeff", "surface-tint": "#0054d7", "surface-container-lowest": "#ffffff", "on-secondary": "#ffffff", "secondary-fixed": "#dbe3f0", "inverse-surface": "#273140", "outline-variant": "#c2c6d8", "on-tertiary-fixed-variant": "#005137", "tertiary-fixed-dim": "#6bdba9", "on-surface": "#121c2a", "surface-variant": "#d9e3f6", "inverse-on-surface": "#ebf1ff", "tertiary": "#006646", "on-secondary-container": "#5d6570", "on-background": "#121c2a", "secondary-container": "#dbe3f0", "on-primary-fixed": "#00184a", "error-container": "#ffdad6", "on-error": "#ffffff", "primary-container": "#0866ff", "on-surface-variant": "#424656", "surface-container-highest": "#d9e3f6", "on-secondary-fixed-variant": "#3f4752", "error": "#ba1a1a", "on-primary-fixed-variant": "#003fa5", "on-primary": "#ffffff", "surface-container-low": "#eff3ff", "on-tertiary-container": "#e1ffec", "on-error-container": "#93000a", "on-tertiary": "#ffffff", "on-secondary-fixed": "#141c25", "primary-fixed": "#dbe1ff", "on-tertiary-fixed": "#002114", "tertiary-container": "#00825a", "on-primary-container": "#f9f7ff", "secondary": "#575f6a", "outline": "#727687", "surface": "#f8f9ff", "secondary-fixed-dim": "#bfc7d4", "surface-container-high": "#dfe9fc", "primary-fixed-dim": "#b3c5ff", "inverse-primary": "#b3c5ff", "surface-dim": "#d0daee", "primary": "#0050cd" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-xl": "2rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "margin": "1rem", "gutter": "1rem", "space-md": "1rem" }, fontFamily: { "headline-lg": ["Inter"], "body-md": ["Inter"], "caption-sm": ["Inter"], "title-sm": ["Inter"], "title-md": ["Inter"], "label-sm": ["Inter"], "caption-md": ["Inter"], "headline-md": ["Inter"], "label-lg": ["Inter"], "label-md": ["Inter"], "body-lg": ["Inter"] }, fontSize: { "headline-lg": ["24px", { lineHeight: "32px", letterSpacing: "-0.02em", fontWeight: "700" }], "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }], "caption-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }], "title-sm": ["16px", { lineHeight: "22px", fontWeight: "600" }], "title-md": ["18px", { lineHeight: "24px", letterSpacing: "-0.01em", fontWeight: "600" }], "label-sm": ["13px", { lineHeight: "16px", fontWeight: "500" }], "caption-md": ["13px", { lineHeight: "16px", fontWeight: "400" }], "headline-md": ["22px", { lineHeight: "28px", letterSpacing: "-0.015em", fontWeight: "700" }], "label-lg": ["15px", { lineHeight: "20px", fontWeight: "600" }], "label-md": ["14px", { lineHeight: "18px", fontWeight: "500" }], "body-lg": ["15px", { lineHeight: "22px", fontWeight: "400" }] } } } }</script><style>@layer base{html,body{width:100%;margin:0;padding:0;background-color:#f8f9ff;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="w-full px-4 pt-1 flex items-center justify-between text-on-surface"><span class="font-label-sm text-label-sm font-semibold">9:41</span><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">wifi</span><span class="material-symbols-outlined text-[16px]">signal_cellular_alt</span><span class="material-symbols-outlined text-[18px]">battery_full</span></div></div><div class="h-14 px-2 flex items-center justify-between"><div class="flex items-center gap-1"><button class="w-11 h-11 flex items-center justify-center text-on-surface hover:text-primary transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><h1 class="font-title-md text-title-md text-on-surface">Friend Requests</h1></div><div class="flex items-center pr-2"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-20 pb-safe bg-surface px-margin min-h-screen"><div class="flex flex-col w-full pb-8">
+<!-- Segmented Control Bar -->
+<div class="w-full mb-4">
+<div class="w-full bg-surface-container p-1 rounded-full flex items-center justify-between">
+<button class="flex-1 py-2 rounded-full bg-surface-container-lowest text-primary shadow-sm font-label-md text-label-md flex items-center justify-center gap-1.5 transition-all duration-200" id="tab-received" onclick="switchTab('received')">
+<span>Received</span>
+<span class="bg-primary-fixed text-on-primary-fixed text-caption-sm font-caption-sm px-2 py-0.5 rounded-full font-semibold">3</span>
+</button>
+<button class="flex-1 py-2 rounded-full text-secondary font-label-md text-label-md flex items-center justify-center gap-1.5 transition-all duration-200" id="tab-sent" onclick="switchTab('sent')">
+<span>Sent</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed text-caption-sm font-caption-sm px-2 py-0.5 rounded-full font-medium">3</span>
+</button>
+</div>
+</div>
+<!-- Toast Notification Container -->
+<div class="hidden transition-all duration-300 mb-3 w-full py-2.5 px-4 rounded-xl bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm flex items-center justify-between shadow-md" id="toast-pill">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-tertiary-fixed">check_circle</span>
+<span id="toast-message">Friend request accepted!</span>
+</div>
+<button class="text-inverse-on-surface opacity-80 hover:opacity-100" onclick="dismissToast()">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Section: Received Tab View -->
+<div class="flex flex-col gap-3" id="view-received">
+<!-- Card 1: Ha Pham -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col gap-3 transition-all duration-300" id="card-hp">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-full bg-error-container text-on-error-container font-title-sm text-title-sm flex items-center justify-center font-bold">
+            HP
+          </div>
+<div class="flex flex-col">
+<h2 class="font-label-lg text-label-lg text-on-surface">Ha Pham</h2>
+<span class="font-caption-sm text-caption-sm text-secondary">Wants to connect with you</span>
+</div>
+</div>
+<span class="font-caption-sm text-caption-sm text-secondary pt-0.5">1h ago</span>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center gap-1 active:scale-[0.98] transition-transform" onclick="handleAction('card-hp', 'Ha Pham', true)">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>Accept</span>
+</button>
+<button class="flex-1 h-10 rounded-lg bg-surface-container-high text-on-surface-variant font-label-md text-label-md flex items-center justify-center active:scale-[0.98] transition-transform" onclick="handleAction('card-hp', 'Ha Pham', false)">
+          Decline
+        </button>
+</div>
+</div>
+<!-- Card 2: Nhi Tran -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col gap-3 transition-all duration-300" id="card-nt">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-full bg-surface-container text-primary font-title-sm text-title-sm flex items-center justify-center font-bold">
+            NT
+          </div>
+<div class="flex flex-col">
+<h2 class="font-label-lg text-label-lg text-on-surface">Nhi Tran</h2>
+<span class="font-caption-sm text-caption-sm text-secondary">Incoming connection</span>
+</div>
+</div>
+<span class="font-caption-sm text-caption-sm text-secondary pt-0.5">5h ago</span>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center gap-1 active:scale-[0.98] transition-transform" onclick="handleAction('card-nt', 'Nhi Tran', true)">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>Accept</span>
+</button>
+<button class="flex-1 h-10 rounded-lg bg-surface-container-high text-on-surface-variant font-label-md text-label-md flex items-center justify-center active:scale-[0.98] transition-transform" onclick="handleAction('card-nt', 'Nhi Tran', false)">
+          Decline
+        </button>
+</div>
+</div>
+<!-- Card 3: Hoang Le -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col gap-3 transition-all duration-300" id="card-hl">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-full bg-secondary-container text-on-secondary-fixed-variant font-title-sm text-title-sm flex items-center justify-center font-bold">
+            HL
+          </div>
+<div class="flex flex-col">
+<h2 class="font-label-lg text-label-lg text-on-surface">Hoang Le</h2>
+<span class="font-caption-sm text-caption-sm text-secondary">Incoming connection</span>
+</div>
+</div>
+<span class="font-caption-sm text-caption-sm text-secondary pt-0.5">Yesterday</span>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center gap-1 active:scale-[0.98] transition-transform" onclick="handleAction('card-hl', 'Hoang Le', true)">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>Accept</span>
+</button>
+<button class="flex-1 h-10 rounded-lg bg-surface-container-high text-on-surface-variant font-label-md text-label-md flex items-center justify-center active:scale-[0.98] transition-transform" onclick="handleAction('card-hl', 'Hoang Le', false)">
+          Decline
+        </button>
+</div>
+</div>
+<!-- Empty State for Received (Hidden by default) -->
+<div class="hidden flex-col items-center justify-center py-12 px-6 text-center bg-surface-container-lowest rounded-xl shadow-sm" id="empty-received">
+<div class="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center text-primary mb-3">
+<span class="material-symbols-outlined text-[28px]">mark_email_read</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-1">All caught up!</h3>
+<p class="font-body-md text-body-md text-secondary">You have responded to all incoming friend requests.</p>
+</div>
+</div>
+<!-- Section: Sent Tab View (Hidden initially) -->
+<div class="hidden flex-col gap-3" id="view-sent">
+<!-- Sent Item 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-full bg-primary-fixed text-on-primary-fixed font-title-sm text-title-sm flex items-center justify-center font-bold">
+          MN
+        </div>
+<div class="flex flex-col">
+<h2 class="font-label-lg text-label-lg text-on-surface">Minh Nguyen</h2>
+<span class="font-caption-sm text-caption-sm text-secondary">Sent 2d ago</span>
+</div>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant font-label-sm text-label-sm active:scale-[0.97]">
+        Cancel
+      </button>
+</div>
+<!-- Sent Item 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-full bg-surface-container-high text-on-surface-variant font-title-sm text-title-sm flex items-center justify-center font-bold">
+          AN
+        </div>
+<div class="flex flex-col">
+<h2 class="font-label-lg text-label-lg text-on-surface">Anh Ngo</h2>
+<span class="font-caption-sm text-caption-sm text-secondary">Sent 4d ago</span>
+</div>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant font-label-sm text-label-sm active:scale-[0.97]">
+        Cancel
+      </button>
+</div>
+<!-- Sent Item 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-title-sm text-title-sm flex items-center justify-center font-bold">
+          KD
+        </div>
+<div class="flex flex-col">
+<h2 class="font-label-lg text-label-lg text-on-surface">Khanh Do</h2>
+<span class="font-caption-sm text-caption-sm text-secondary">Sent 1w ago</span>
+</div>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant font-label-sm text-label-sm active:scale-[0.97]">
+        Cancel
+      </button>
+</div>
+</div>
+</div>
+<script>
+  let activeTab = 'received';
+  let remainingRequests = 3;
+
+  function switchTab(tab) {
+    activeTab = tab;
+    const tabRec = document.getElementById('tab-received');
+    const tabSent = document.getElementById('tab-sent');
+    const viewRec = document.getElementById('view-received');
+    const viewSent = document.getElementById('view-sent');
+
+    if (tab === 'received') {
+      tabRec.className = "flex-1 py-2 rounded-full bg-surface-container-lowest text-primary shadow-sm font-label-md text-label-md flex items-center justify-center gap-1.5 transition-all duration-200";
+      tabSent.className = "flex-1 py-2 rounded-full text-secondary font-label-md text-label-md flex items-center justify-center gap-1.5 transition-all duration-200";
+      viewRec.classList.remove('hidden');
+      viewSent.classList.add('hidden');
+    } else {
+      tabSent.className = "flex-1 py-2 rounded-full bg-surface-container-lowest text-primary shadow-sm font-label-md text-label-md flex items-center justify-center gap-1.5 transition-all duration-200";
+      tabRec.className = "flex-1 py-2 rounded-full text-secondary font-label-md text-label-md flex items-center justify-center gap-1.5 transition-all duration-200";
+      viewSent.classList.remove('hidden');
+      viewRec.classList.add('hidden');
+    }
+  }
+
+  function handleAction(cardId, name, accepted) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+
+    card.style.opacity = '0';
+    card.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      card.remove();
+      remainingRequests--;
+      if (remainingRequests <= 0) {
+        const emptyState = document.getElementById('empty-received');
+        if (emptyState) emptyState.classList.remove('hidden');
+      }
+    }, 250);
+
+    const toast = document.getElementById('toast-pill');
+    const toastMsg = document.getElementById('toast-message');
+    if (toast && toastMsg) {
+      toastMsg.innerText = accepted
+        ? `You and ${name} are now friends!`
+        : `Request from ${name} declined.`;
+      toast.classList.remove('hidden');
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        dismissToast();
+      }, 3500);
+    }
+  }
+
+  function dismissToast() {
+    const toast = document.getElementById('toast-pill');
+    if (toast) toast.classList.add('hidden');
+  }
+</script></main></body></html>

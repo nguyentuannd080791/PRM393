@@ -8,41 +8,53 @@ class AppColors {
   // ---------------------------------------------------------------------------
   // Brand Primary & Accents (Distinct Royal Blue & Deep Indigo)
   // ---------------------------------------------------------------------------
-  static const Color primaryLight = Color(0xFF2563EB); // Tailwind Royal Blue 600
-  static const Color primaryDark = Color(0xFF60A5FA);  // Tailwind Blue 400
+  static const Color primaryLight = Color(
+    0xFF2563EB,
+  ); // Tailwind Royal Blue 600
+  static const Color primaryDark = Color(0xFF60A5FA); // Tailwind Blue 400
   static const Color primaryContainerLight = Color(0xFFDBEAFE);
   static const Color primaryContainerDark = Color(0xFF1E3A8A);
 
   static const Color secondaryLight = Color(0xFF64748B); // Slate 500
-  static const Color secondaryDark = Color(0xFF94A3B8);  // Slate 400
+  static const Color secondaryDark = Color(0xFF94A3B8); // Slate 400
   static const Color secondaryContainerLight = Color(0xFFF1F5F9);
   static const Color secondaryContainerDark = Color(0xFF334155);
 
   static const Color tertiaryLight = Color(0xFFDB2777); // Rose 600
-  static const Color tertiaryDark = Color(0xFFF472B6);  // Rose 400
+  static const Color tertiaryDark = Color(0xFFF472B6); // Rose 400
 
   // ---------------------------------------------------------------------------
   // Dark Surfaces (BR-21 Default: Deep Slate / OLED friendly)
   // ---------------------------------------------------------------------------
   static const Color darkBackground = Color(0xFF0F172A); // Slate 900
-  static const Color darkSurface = Color(0xFF121212);    // Baseline M3 dark surface
-  static const Color darkCardSurface = Color(0xFF1E293B);// Slate 800 (Post cards)
-  static const Color darkDialogSurface = Color(0xFF334155);// Slate 700
-  static const Color darkTextPrimary = Color(0xFFE2E8F0);// High-contrast text (15.2:1)
-  static const Color darkTextSecondary = Color(0xFF94A3B8);// Secondary text (7.3:1)
-  static const Color darkBorder = Color(0xFF475569);     // Outlines & borders
-  static const Color darkDivider = Color(0xFF334155);    // Subtle list dividers
+  static const Color darkSurface = Color(
+    0xFF121212,
+  ); // Baseline M3 dark surface
+  static const Color darkCardSurface = Color(
+    0xFF1E293B,
+  ); // Slate 800 (Post cards)
+  static const Color darkDialogSurface = Color(0xFF334155); // Slate 700
+  static const Color darkTextPrimary = Color(
+    0xFFE2E8F0,
+  ); // High-contrast text (15.2:1)
+  static const Color darkTextSecondary = Color(
+    0xFF94A3B8,
+  ); // Secondary text (7.3:1)
+  static const Color darkBorder = Color(0xFF475569); // Outlines & borders
+  static const Color darkDivider = Color(0xFF334155); // Subtle list dividers
 
   // ---------------------------------------------------------------------------
   // Light Surfaces
   // ---------------------------------------------------------------------------
-  static const Color lightBackground = Color(0xFFF8FAFC);// Slate 50
-  static const Color lightSurface = Color(0xFFFFFFFF);   // Pure white
+  static const Color lightBackground = Color(0xFFFFFFFF);
+  static const Color lightSurface = Color(0xFFFFFFFF); // Pure white
   static const Color lightCardSurface = Color(0xFFFFFFFF);
-  static const Color lightTextPrimary = Color(0xFF0F172A);// Slate 900 (17.9:1)
-  static const Color lightTextSecondary = Color(0xFF64748B);// Slate 500 (4.76:1)
-  static const Color lightBorder = Color(0xFFCBD5E1);    // Slate 300
-  static const Color lightDivider = Color(0xFFE2E8F0);   // Slate 200
+  static const Color lightTextPrimary = Color(0xFF0F172A); // Slate 900 (17.9:1)
+  static const Color lightTextSecondary = Color(
+    0xFF64748B,
+  ); // Slate 500 (4.76:1)
+  static const Color lightBorder = Color(0xFFCBD5E1); // Slate 300
+  static const Color lightDivider = Color(0xFFE2E8F0); // Slate 200
 
   // ---------------------------------------------------------------------------
   // Semantic & Reaction Colors
@@ -54,9 +66,9 @@ class AppColors {
   static const Color reactionLike = Color(0xFF2563EB); // Royal Blue
   static const Color reactionLove = Color(0xFFEF4444); // Red
   static const Color reactionHaha = Color(0xFFF59E0B); // Amber
-  static const Color reactionWow = Color(0xFFF59E0B);  // Amber
-  static const Color reactionSad = Color(0xFF3B82F6);  // Light Blue
-  static const Color reactionAngry = Color(0xFFEA580C);// Deep Orange
+  static const Color reactionWow = Color(0xFFF59E0B); // Amber
+  static const Color reactionSad = Color(0xFF3B82F6); // Light Blue
+  static const Color reactionAngry = Color(0xFFEA580C); // Deep Orange
 
   // ---------------------------------------------------------------------------
   // Material 3 Color Schemes

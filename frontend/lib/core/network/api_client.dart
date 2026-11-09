@@ -1,12 +1,12 @@
+import '../config/api_config.dart';
+
 import 'dart:convert';
-import 'dart:io' show Platform;
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:clone_facebook/features/auth/presentation/providers/auth_state_provider.dart';
+import 'package:clone_facebook/features/auth/auth_provider.dart';
 
-import 'token_storage.dart';
+import '../storage/session_storage.dart';
 
 /// Exception thrown on REST API failure.
 class ApiException implements Exception {
@@ -72,7 +72,7 @@ ApiException mapDioException(DioException error) {
 
 /// Attaches `Authorization: Bearer <token>` to outgoing HTTP requests and intercepts 401 Unauthorized.
 class AuthInterceptor extends Interceptor {
-  final TokenStorage _tokenStorage;
+  final SessionStorage _tokenStorage;
   final void Function()? onSessionExpired;
 
   AuthInterceptor(this._tokenStorage, {this.onSessionExpired});
@@ -105,32 +105,21 @@ class AuthInterceptor extends Interceptor {
 /// Centralized Dio REST API Client.
 class ApiClient {
   final Dio dio;
-  final TokenStorage tokenStorage;
+  final SessionStorage tokenStorage;
   final void Function()? onSessionExpired;
 
   /// Global adapter override for automated test harnesses.
   static HttpClientAdapter? testAdapter;
   static void Function()? onGlobalSessionExpired;
 
-  static String get defaultBaseUrl {
-    const envUrl = String.fromEnvironment('API_BASE_URL');
-    if (envUrl.isNotEmpty) return envUrl;
-    if (!kIsWeb) {
-      try {
-        if (Platform.isAndroid) {
-          return 'http://10.0.2.2:5000/api';
-        }
-      } catch (_) {}
-    }
-    return 'http://localhost:5000/api';
-  }
+  static String get defaultBaseUrl => ApiConfig.baseUrl;
 
   ApiClient({
     String? baseUrl,
-    TokenStorage? tokenStorage,
+    SessionStorage? tokenStorage,
     Dio? customDio,
     this.onSessionExpired,
-  }) : tokenStorage = tokenStorage ?? TokenStorage(),
+  }) : tokenStorage = tokenStorage ?? SessionStorage(),
        dio =
            customDio ??
            Dio(
@@ -351,7 +340,7 @@ class ApiClient {
 }
 
 final apiClientProvider = Provider<ApiClient>((ref) {
-  final storage = ref.watch(tokenStorageProvider);
+  final storage = ref.watch(sessionStorageProvider);
   return ApiClient(
     tokenStorage: storage,
     onSessionExpired: () {

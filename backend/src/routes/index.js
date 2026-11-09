@@ -7,6 +7,7 @@ const router = express.Router();
 const authRoutes = require('./auth.routes');
 // Mount auth routes under /api/auth
 router.use('/auth', authRoutes);
+router.use('/search', require('./search.routes'));
 
 // Optional modules (loaded if present)
 const tryMount = (routePath, file) => {
@@ -18,11 +19,12 @@ const tryMount = (routePath, file) => {
 };
 
 tryMount('/feed', 'feed.routes');
-tryMount('/', 'interaction.routes'); // handles /posts/:id/reaction, /posts/:id/comments, /comments/:id
-tryMount('/posts', 'post.routes');
-tryMount('/friends', 'friend.routes');
+tryMount('/', 'interactions.routes'); // handles /posts/:id/reaction, /posts/:id/comments, /comments/:id
+tryMount('/posts', 'posts.routes');
+tryMount('/friends', 'friends.routes');
 tryMount('/notifications', 'notification.routes');
 tryMount('/users', 'user.routes');
 
-module.exports = router;
+tryMount('/profile', 'profile.routes');
 
+module.exports = router;

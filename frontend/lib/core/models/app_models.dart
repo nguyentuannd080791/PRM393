@@ -101,7 +101,8 @@ class UserModel {
   );
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UserModel && id == other.id;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is UserModel && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -168,17 +169,26 @@ class PostModel {
     id: json['id'].toString(),
     authorId: (json['author_id'] ?? json['authorId'] ?? '').toString(),
     content: json['content'] as String?,
-    mediaUrls: (json['media_urls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
+    mediaUrls:
+        (json['media_urls'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        const [],
     audience: PostAudience.fromString(json['audience'] as String? ?? 'friends'),
     sharedPostId: json['shared_post_id']?.toString(),
-    createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : DateTime.now(),
+    createdAt: json['created_at'] != null
+        ? DateTime.parse(json['created_at'] as String)
+        : DateTime.now(),
     updatedAt: json['updated_at'] != null
         ? DateTime.parse(json['updated_at'] as String)
-        : (json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : DateTime.now()),
+        : (json['created_at'] != null
+              ? DateTime.parse(json['created_at'] as String)
+              : DateTime.now()),
   );
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is PostModel && id == other.id;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is PostModel && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -233,7 +243,8 @@ class CommentModel {
   );
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is CommentModel && id == other.id;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is CommentModel && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -284,7 +295,9 @@ class ReactionModel {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ReactionModel && postId == other.postId && userId == other.userId;
+      other is ReactionModel &&
+          postId == other.postId &&
+          userId == other.userId;
 
   @override
   int get hashCode => Object.hash(postId, userId);
@@ -335,17 +348,24 @@ class FriendshipModel {
     'responded_at': respondedAt?.toIso8601String(),
   };
 
-  factory FriendshipModel.fromJson(Map<String, dynamic> json) => FriendshipModel(
+  factory FriendshipModel.fromJson(
+    Map<String, dynamic> json,
+  ) => FriendshipModel(
     id: json['id']?.toString() ?? '',
     requesterId: (json['requester_id'] ?? json['requesterId'] ?? '').toString(),
     receiverId: (json['receiver_id'] ?? json['receiverId'] ?? '').toString(),
     status: FriendshipStatus.fromString(json['status'] as String? ?? 'none'),
-    createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : DateTime.now(),
-    respondedAt: json['responded_at'] != null ? DateTime.tryParse(json['responded_at'] as String) : null,
+    createdAt: json['created_at'] != null
+        ? DateTime.parse(json['created_at'] as String)
+        : DateTime.now(),
+    respondedAt: json['responded_at'] != null
+        ? DateTime.tryParse(json['responded_at'] as String)
+        : null,
   );
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is FriendshipModel && id == other.id;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is FriendshipModel && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -401,18 +421,20 @@ class NotificationModel {
     'created_at': createdAt.toIso8601String(),
   };
 
-  factory NotificationModel.fromJson(Map<String, dynamic> json) => NotificationModel(
-    id: json['id'].toString(),
-    recipientId: json['recipient_id'].toString(),
-    actorId: json['actor_id'].toString(),
-    postId: json['post_id']?.toString(),
-    type: NotificationType.fromString(json['type'] as String),
-    isRead: json['is_read'] as bool? ?? false,
-    createdAt: DateTime.parse(json['created_at'] as String),
-  );
+  factory NotificationModel.fromJson(Map<String, dynamic> json) =>
+      NotificationModel(
+        id: json['id'].toString(),
+        recipientId: json['recipient_id'].toString(),
+        actorId: json['actor_id'].toString(),
+        postId: json['post_id']?.toString(),
+        type: NotificationType.fromString(json['type'] as String),
+        isRead: json['is_read'] as bool? ?? false,
+        createdAt: DateTime.parse(json['created_at'] as String),
+      );
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is NotificationModel && id == other.id;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is NotificationModel && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -475,12 +497,15 @@ class FeedPostView {
         ? json['post'] as Map<String, dynamic>
         : json;
     final authorData = json['author'] as Map<String, dynamic>? ?? {};
-    final reactionTypeCountsRaw = json['reaction_type_counts'] as Map<String, dynamic>? ?? {};
+    final reactionTypeCountsRaw =
+        json['reaction_type_counts'] as Map<String, dynamic>? ?? {};
     final reactionTypeCounts = <ReactionType, int>{};
     reactionTypeCountsRaw.forEach((k, v) {
       final rType = ReactionType.fromString(k);
       if (rType != null) {
-        reactionTypeCounts[rType] = (v is num) ? v.toInt() : int.tryParse(v.toString()) ?? 0;
+        reactionTypeCounts[rType] = (v is num)
+            ? v.toInt()
+            : int.tryParse(v.toString()) ?? 0;
       }
     });
 
@@ -490,11 +515,14 @@ class FeedPostView {
       reactionCount: (json['reaction_count'] as num?)?.toInt() ?? 0,
       reactionTypeCounts: reactionTypeCounts,
       currentUserReaction: ReactionType.fromString(
-        json['current_user_reaction'] as String? ?? json['user_reaction'] as String?,
+        json['current_user_reaction'] as String? ??
+            json['user_reaction'] as String?,
       ),
       commentCount: (json['comment_count'] as num?)?.toInt() ?? 0,
       shareCount: (json['share_count'] as num?)?.toInt() ?? 0,
-      sharedPost: json['shared_post'] != null && json['shared_post'] is Map<String, dynamic>
+      sharedPost:
+          json['shared_post'] != null &&
+              json['shared_post'] is Map<String, dynamic>
           ? FeedPostView.fromJson(json['shared_post'] as Map<String, dynamic>)
           : null,
       isOriginalDeleted: json['is_original_deleted'] as bool? ?? false,
@@ -505,7 +533,9 @@ class FeedPostView {
     'post': post.toJson(),
     'author': author.toJson(),
     'reaction_count': reactionCount,
-    'reaction_type_counts': reactionTypeCounts.map((k, v) => MapEntry(k.name, v)),
+    'reaction_type_counts': reactionTypeCounts.map(
+      (k, v) => MapEntry(k.name, v),
+    ),
     'current_user_reaction': currentUserReaction?.name,
     'comment_count': commentCount,
     'share_count': shareCount,
@@ -519,13 +549,11 @@ class CommentView {
   final CommentModel comment;
   final UserModel author;
 
-  const CommentView({
-    required this.comment,
-    required this.author,
-  });
+  const CommentView({required this.comment, required this.author});
 
   factory CommentView.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey('comment') && json['comment'] is Map<String, dynamic>) {
+    if (json.containsKey('comment') &&
+        json['comment'] is Map<String, dynamic>) {
       return CommentView(
         comment: CommentModel.fromJson(json['comment'] as Map<String, dynamic>),
         author: UserModel.fromJson(json['author'] as Map<String, dynamic>),
@@ -558,7 +586,9 @@ class NotificationView {
   });
 
   factory NotificationView.fromJson(Map<String, dynamic> json) {
-    final notifData = json.containsKey('notification') && json['notification'] is Map<String, dynamic>
+    final notifData =
+        json.containsKey('notification') &&
+            json['notification'] is Map<String, dynamic>
         ? json['notification'] as Map<String, dynamic>
         : json;
     return NotificationView(
@@ -592,7 +622,9 @@ class FriendRequestView {
   });
 
   factory FriendRequestView.fromJson(Map<String, dynamic> json) {
-    final friendshipData = json.containsKey('friendship') && json['friendship'] is Map<String, dynamic>
+    final friendshipData =
+        json.containsKey('friendship') &&
+            json['friendship'] is Map<String, dynamic>
         ? json['friendship'] as Map<String, dynamic>
         : json;
     return FriendRequestView(
@@ -620,7 +652,8 @@ class FriendSuggestionView {
   });
 
   factory FriendSuggestionView.fromJson(Map<String, dynamic> json) {
-    final userData = json.containsKey('user') && json['user'] is Map<String, dynamic>
+    final userData =
+        json.containsKey('user') && json['user'] is Map<String, dynamic>
         ? json['user'] as Map<String, dynamic>
         : json;
     return FriendSuggestionView(
