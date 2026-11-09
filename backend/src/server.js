@@ -2,7 +2,7 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const app = require('./app');
-const db = require('./config/db');
+const db = require('./config/database');
 
 const PORT = parseInt(process.env.PORT || '5000', 10);
 const HOST = '0.0.0.0';
@@ -14,6 +14,7 @@ async function startServer() {
     // 1. Verify MongoDB Database Connection
     console.log('[DB] Connecting to MongoDB...');
     const connInfo = await db.testConnection();
+    await require('./config/member4_indexes').ensureMember4Indexes();
     console.log(`[DB] Connected to database "${connInfo.database}" on ${connInfo.host}:${connInfo.port} (${connInfo.version})`);
 
     // 2. Start HTTP Server Listener

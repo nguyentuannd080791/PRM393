@@ -1,0 +1,196 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_stack" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-variant": "#d9e3f6", "surface-container-high": "#dfe9fc", "surface-bright": "#f8f9ff", "tertiary-container": "#00825a", "primary-fixed": "#dbe1ff", "on-secondary-fixed": "#141c25", "surface-container-lowest": "#ffffff", "surface-container-highest": "#d9e3f6", "primary-fixed-dim": "#b3c5ff", "background": "#f8f9ff", "secondary-fixed-dim": "#bfc7d4", "surface-tint": "#0054d7", "on-error-container": "#93000a", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#005137", "error-container": "#ffdad6", "tertiary-fixed-dim": "#6bdba9", "surface-container": "#e6eeff", "error": "#ba1a1a", "on-secondary-fixed-variant": "#3f4752", "tertiary": "#006646", "secondary": "#575f6a", "on-primary-container": "#f9f7ff", "surface-dim": "#d0daee", "on-background": "#121c2a", "on-error": "#ffffff", "secondary-container": "#dbe3f0", "on-primary-fixed": "#00184a", "on-secondary-container": "#5d6570", "outline": "#727687", "surface-container-low": "#eff3ff", "inverse-primary": "#b3c5ff", "on-primary": "#ffffff", "secondary-fixed": "#dbe3f0", "on-primary-fixed-variant": "#003fa5", "on-tertiary-container": "#e1ffec", "surface": "#f8f9ff", "tertiary-fixed": "#88f8c4", "primary-container": "#0866ff", "on-secondary": "#ffffff", "inverse-on-surface": "#ebf1ff", "primary": "#0050cd", "inverse-surface": "#273140", "on-surface-variant": "#424656", "on-tertiary-fixed": "#002114", "outline-variant": "#c2c6d8", "on-surface": "#121c2a" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-sm": "0.5rem", "space-md": "1rem", "gutter": "1rem", "space-lg": "1.5rem", "margin": "1rem", "space-xl": "2rem", "space-xs": "0.25rem" }, fontFamily: { "caption-sm": ["Inter"], "headline-md": ["Inter"], "body-lg": ["Inter"], "title-sm": ["Inter"], "label-md": ["Inter"], "headline-lg": ["Inter"], "label-sm": ["Inter"], "body-md": ["Inter"], "label-lg": ["Inter"], "title-md": ["Inter"], "caption-md": ["Inter"] }, fontSize: { "caption-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }], "headline-md": ["22px", { lineHeight: "28px", letterSpacing: "-0.015em", fontWeight: "700" }], "body-lg": ["15px", { lineHeight: "22px", fontWeight: "400" }], "title-sm": ["16px", { lineHeight: "22px", fontWeight: "600" }], "label-md": ["14px", { lineHeight: "18px", fontWeight: "500" }], "headline-lg": ["24px", { lineHeight: "32px", letterSpacing: "-0.02em", fontWeight: "700" }], "label-sm": ["13px", { lineHeight: "16px", fontWeight: "500" }], "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }], "label-lg": ["15px", { lineHeight: "20px", fontWeight: "600" }], "title-md": ["18px", { lineHeight: "24px", letterSpacing: "-0.01em", fontWeight: "600" }], "caption-md": ["13px", { lineHeight: "16px", fontWeight: "400" }] } } } };</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="flex items-center justify-between px-margin h-6 select-none"><span class="font-label-sm text-label-sm text-on-surface font-semibold tracking-tight">9:41</span><div class="flex items-center gap-space-xs text-on-surface"><span class="material-symbols-outlined text-[16px]">signal_cellular_alt</span><span class="material-symbols-outlined text-[16px]">wifi</span><span class="material-symbols-outlined text-[16px]">battery_full</span></div></div><div class="h-14 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm min-w-0"><button aria-label="Go Back" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-on-surface hover:text-primary" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><h1 class="font-title-sm text-title-sm text-on-surface font-bold truncate">Comments</h1></div><div class="flex items-center gap-space-sm shrink-0"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-20 pb-safe bg-surface px-margin"><div class="flex flex-col w-full pb-24">
+<!-- Header Subtitle / Count Badge Bar -->
+<div class="flex items-center justify-between py-space-sm mb-space-sm"><h2 class="font-headline-md text-headline-md text-on-surface">Comments <span class="font-label-lg text-secondary">(4)</span></h2></div>
+<!-- Selected Post Context Card -->
+<article class="w-full bg-surface-container-lowest rounded-xl shadow-sm p-space-md mb-space-md">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center shrink-0">
+<span class="font-label-lg text-label-lg text-primary font-semibold">AN</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-title-sm text-title-sm text-on-surface truncate">An Nguyen</span>
+<span class="font-caption-sm text-caption-sm text-secondary">@annguyen</span>
+</div>
+<span class="font-caption-sm text-caption-sm text-outline">2h ago</span>
+</div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface leading-snug">
+      Spent a lovely afternoon catching up with friends. What did you do today?
+    </p>
+</article>
+<!-- Visual transition / Subtle channel tag -->
+<div class="flex items-center gap-2 mb-space-md px-1">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Responses</span>
+<div class="flex-1 h-0.5 bg-surface-container rounded-full"></div>
+</div>
+<!-- Comments List -->
+<div class="flex flex-col gap-space-sm" id="comments-container">
+<!-- Comment 1: Binh Tran -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm transition-all hover:bg-surface-container-low">
+<div class="flex items-start gap-space-sm">
+<div class="w-7 h-7 rounded-full bg-secondary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-secondary-container font-semibold">BT</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-lg text-label-lg text-on-surface truncate">Binh Tran</span>
+<span class="font-caption-sm text-caption-sm text-secondary shrink-0">1h ago</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-1">
+            That sounds lovely!
+          </p>
+</div>
+</div>
+</div>
+<!-- Comment 2: Minh Le -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm transition-all hover:bg-surface-container-low">
+<div class="flex items-start gap-space-sm">
+<div class="w-7 h-7 rounded-full bg-secondary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-secondary-container font-semibold">ML</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-lg text-label-lg text-on-surface truncate">Minh Le</span>
+<span class="font-caption-sm text-caption-sm text-secondary shrink-0">38m ago</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-1">
+            Glad you had a great afternoon.
+          </p>
+</div>
+</div>
+</div>
+<!-- Comment 3: Ha Pham -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm transition-all hover:bg-surface-container-low">
+<div class="flex items-start gap-space-sm">
+<div class="w-7 h-7 rounded-full bg-secondary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-secondary-container font-semibold">HP</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-lg text-label-lg text-on-surface truncate">Ha Pham</span>
+<span class="font-caption-sm text-caption-sm text-secondary shrink-0">15m ago</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-1">
+            We should all catch up sometime!
+          </p>
+</div>
+</div>
+</div>
+<!-- Comment 4: An Nguyen (Author / Signed-in user) -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative transition-all" id="comment-author">
+<div class="flex items-start gap-space-sm">
+<div class="w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center shrink-0 mt-0.5">
+<span class="font-label-sm text-label-sm text-primary font-semibold">AN</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 min-w-0">
+<span class="font-label-lg text-label-lg text-on-surface truncate">An Nguyen</span>
+<span class="px-1.5 py-0.2 rounded bg-primary-fixed text-primary font-caption-sm text-caption-sm font-semibold">Author</span>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<span class="font-caption-sm text-caption-sm text-secondary">Just now</span>
+<button aria-label="Delete your comment" class="flex items-center gap-0.5 text-error hover:text-on-error-container transition-colors py-1 px-1.5 rounded-lg active:bg-error-container" id="btn-delete-comment" type="button">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+<span class="font-caption-sm text-caption-sm font-medium">Delete</span>
+</button>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-1">
+            Definitely! Let's plan something soon.
+          </p>
+</div>
+</div>
+</div>
+</div>
+<!-- End of thread calm indicator -->
+<div class="flex flex-col items-center justify-center mt-space-lg mb-space-sm text-center">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center mb-1 text-secondary">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="font-caption-sm text-caption-sm text-secondary">You're caught up with the conversation</span>
+</div>
+<!-- Fixed Bottom Composer Overlay -->
+<div class="fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-md px-margin pb-safe pt-2 shadow-[0_-2px_12px_rgba(0,0,0,0.05)]">
+<form class="flex items-center gap-2 max-w-screen-md mx-auto w-full py-2" id="comment-form" onsubmit="return false;">
+<!-- User thumbnail mini -->
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center shrink-0">
+<span class="font-label-sm text-label-sm text-primary font-semibold">AN</span>
+</div>
+<!-- Text Composer Field -->
+<div class="flex-1 relative flex items-center bg-surface-container-lowest rounded-full shadow-sm px-4 py-1.5">
+<input autocomplete="off" class="w-full bg-transparent text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none py-1" id="comment-input" placeholder="Write a comment..." type="text">
+</div>
+<!-- Action Button -->
+<button aria-label="Send comment" class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm active:scale-95 transition-transform hover:opacity-95" id="btn-send-comment" type="submit">
+<span class="material-symbols-outlined text-[20px]" style="transform: rotate(-10deg) translate(1px, -1px);">send</span>
+</button>
+</form>
+</div>
+</div>
+<script>
+  (function() {
+    const deleteBtn = document.getElementById('btn-delete-comment');
+    const authorComment = document.getElementById('comment-author');
+    const commentForm = document.getElementById('comment-form');
+    const commentInput = document.getElementById('comment-input');
+    const commentsContainer = document.getElementById('comments-container');
+
+    if (deleteBtn && authorComment) {
+      deleteBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        authorComment.style.opacity = '0';
+        authorComment.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          authorComment.remove();
+        }, 180);
+      });
+    }
+
+    if (commentForm && commentInput && commentsContainer) {
+      commentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const value = commentInput.value.trim();
+        if (!value) return;
+
+        const newComment = document.createElement('div');
+        newComment.className = 'w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative transition-all';
+        newComment.innerHTML = `
+          <div class="flex items-start gap-space-sm">
+            <div class="w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center shrink-0 mt-0.5">
+              <span class="font-label-sm text-label-sm text-primary font-semibold">AN</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="font-label-lg text-label-lg text-on-surface truncate">An Nguyen</span>
+                  <span class="px-1.5 py-0.2 rounded bg-primary-fixed text-primary font-caption-sm text-caption-sm font-semibold">Author</span>
+                </div>
+                <span class="font-caption-sm text-caption-sm text-secondary shrink-0">Just now</span>
+              </div>
+              <p class="font-body-md text-body-md text-on-surface mt-1">${value.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>
+            </div>
+          </div>
+        `;
+        commentsContainer.appendChild(newComment);
+        commentInput.value = '';
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      });
+    }
+  })();
+</script></main>
+
+</body></html>
