@@ -1,7 +1,7 @@
 # HƯỚNG DẪN THAO TÁC TOÀN DIỆN HỆ THỐNG FACEBOOK CLONE (`fb_clone` / `Connect`)
 
 > **Dự án:** PRM393 - Mobile Social Networking Application  
-> **Kiến trúc:** Flutter Mobile (Clean Architecture + Riverpod) & Node.js REST API (Express.js + PostgreSQL)  
+> **Kiến trúc:** Flutter Mobile (Clean Architecture + Riverpod) & Node.js REST API (Express.js + MongoDB)  
 > **Phiên bản:** Hoàn thiện kết nối Backend thực tế, 100% sạch Mock Data.
 
 ---
@@ -23,7 +23,7 @@
 Trước khi thao tác, đảm bảo máy tính của bạn đã cài đặt các công cụ sau:
 
 - **Node.js**: Phiên bản `>= 18.x` (kèm `npm`).
-- **PostgreSQL**: Phiên bản `>= 14.x` (đang chạy service trên máy hoặc Docker container).
+- **MongoDB**: Phiên bản `>= 6.x / 7.x / 8.x` (đang chạy service trên cổng `27017` hoặc qua MongoDB Atlas).
 - **Flutter SDK**: Phiên bản `>= 3.16.x` (kèm Dart SDK `>= 3.2.x`).
 - **Google Chrome** hoặc **Android Studio** (Android Emulator) để chạy giao diện.
 
@@ -32,7 +32,7 @@ Kiểm tra nhanh trên terminal:
 ```bash
 node -v
 npm -v
-psql --version
+mongosh --version
 flutter --version
 ```
 
@@ -80,7 +80,7 @@ clone_facebook/
 
 ---
 
-## 3. Hướng dẫn cài đặt & Khởi chạy Backend (Node.js + PostgreSQL)
+## 3. Hướng dẫn cài đặt & Khởi chạy Backend (Node.js + MongoDB)
 
 ### Bước 3.1: Cấu hình biến môi trường
 
@@ -93,49 +93,44 @@ cd d:\Project\PRM393\clone_facebook\backend
 Copy-Item .env.example .env
 ```
 
-Mở file `backend/.env` và cập nhật thông số PostgreSQL của bạn:
+Mở file `backend/.env` và cập nhật thông số MongoDB của bạn:
 
 ```ini
 PORT=5000
 NODE_ENV=development
 
-# Thông số kết nối PostgreSQL của bạn
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=your_postgres_password
-DB_NAME=fb_clone_db
+# Thông số kết nối MongoDB
+MONGODB_URI=mongodb://127.0.0.1:27017/fb_clone
+MONGODB_DB_NAME=fb_clone
 
 JWT_SECRET=super_secret_jwt_key_for_fb_clone_2026
 JWT_EXPIRES_IN=7d
 ```
 
-> **Lưu ý:** Đảm bảo database `fb_clone_db` đã được tạo trước trong PostgreSQL (`CREATE DATABASE fb_clone_db;`).
-
 ### Bước 3.2: Cài đặt thư viện dependencies
 
 ```powershell
-npm install
+npm.cmd install
 ```
 
-### Bước 3.3: Khởi tạo Cơ sở dữ liệu sạch (Database Schema sạch - 0 rows)
+### Bước 3.3: Khởi tạo Cơ sở dữ liệu sạch (MongoDB Collections & Indexes sạch - 0 documents)
 
-Chạy script tự động tạo 6 bảng quan hệ (`User`, `Post`, `Comment`, `Reaction`, `Friendship`, `Notification`) kèm khóa ngoại, cascade deletes và indexes:
+Chạy script tự động tạo 6 collections (`User`, `Post`, `Comment`, `Reaction`, `Friendship`, `Notification`) kèm các chỉ mục (indexes) tối ưu hóa truy vấn và tính toàn vẹn:
 
 ```powershell
-npm run db:init
+npm.cmd run db:init
 ```
 
-_Thông báo thành công: `[Database] Schema initialized successfully. 6 relational tables ready with 0 rows.`_
+_Thông báo thành công: `[SUCCESS] Clean MongoDB database initialization complete. 6 collections verified with 0 documents.`_
 
 ### Bước 3.4: Khởi chạy máy chủ Backend
 
 ```powershell
 # Chạy ở chế độ production:
-npm start
+npm.cmd start
 
 # Hoặc chạy ở chế độ dev (tự reload khi sửa code):
-npm run dev
+npm.cmd run dev
 ```
 
 _Server sẽ chạy tại `http://localhost:5000`._  

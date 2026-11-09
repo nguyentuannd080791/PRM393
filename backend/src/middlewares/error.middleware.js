@@ -14,28 +14,30 @@ function errorMiddleware(err, req, res, next) {
     console.error(`[ERROR] ${req.method} ${req.url}:`, err);
   }
 
-  // PostgreSQL Error Code 23505: Unique constraint violation (BR-01)
-  if (err.code === '23505') {
-    const detail = err.detail || '';
-    if (detail.includes('email')) {
+  // MongoDB Code 11000: Duplicate key error (or PostgreSQL 23505)
+  if (err.code === 11000 || err.code === '23505') {
+    const errorMsg = err.message || err.detail || '';
+    const keyPattern = err.keyPattern || {};
+
+    if (keyPattern.email || errorMsg.includes('email') || errorMsg.includes('idx_user_email')) {
       return res.status(409).json({
         success: false,
         message: 'Email is already registered',
       });
     }
-    if (detail.includes('phone')) {
+    if (keyPattern.phone || errorMsg.includes('phone') || errorMsg.includes('idx_user_phone')) {
       return res.status(409).json({
         success: false,
         message: 'Phone number is already registered',
       });
     }
-    if (detail.includes('uq_friendship_direct_pair') || detail.includes('idx_friendship_bidirectional_pair')) {
+    if (keyPattern.pair || errorMsg.includes('friendship') || errorMsg.includes('idx_friendship_bidirectional_pair')) {
       return res.status(409).json({
         success: false,
         message: 'A friendship or friend request already exists between these users',
       });
     }
-    if (detail.includes('Reaction')) {
+    if (errorMsg.includes('Reaction') || errorMsg.includes('idx_reaction_post_user_unique')) {
       return res.status(409).json({
         success: false,
         message: 'Reaction already exists for this post',
@@ -44,49 +46,6 @@ function errorMiddleware(err, req, res, next) {
     return res.status(409).json({
       success: false,
       message: 'Resource already exists (unique constraint violation)',
-    });
-  }
-
-  // PostgreSQL Error Code 23503: Foreign Key constraint violation
-  if (err.code === '23503') {
-    return res.status(400).json({
-      success: false,
-      message: 'Referenced entity does not exist',
-      detail: err.detail,
-    });
-  }
-
-  // PostgreSQL Error Code 23514: Check constraint violation
-  if (err.code === '23514') {
-    if (err.constraint === 'chk_friendship_no_self') {
-      return res.status(400).json({
-        success: false,
-        message: 'Cannot send friend request to yourself',
-      });
-    }
-    if (err.constraint === 'chk_post_audience') {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid audience value. Must be 'public', 'friends', or 'only_me'",
-      });
-    }
-    if (err.constraint === 'chk_reaction_type') {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid reaction type',
-      });
-    }
-    return res.status(400).json({
-      success: false,
-      message: 'Validation check constraint failed',
-    });
-  }
-
-  // PostgreSQL Error Code 22P02: Invalid text representation (e.g. invalid UUID format)
-  if (err.code === '22P02') {
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid input syntax (e.g. malformed UUID)',
     });
   }
 

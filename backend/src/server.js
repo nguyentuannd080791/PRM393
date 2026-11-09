@@ -11,10 +11,10 @@ let server = null;
 
 async function startServer() {
   try {
-    // 1. Verify PostgreSQL Database Connection
-    console.log('[DB] Connecting to PostgreSQL...');
+    // 1. Verify MongoDB Database Connection
+    console.log('[DB] Connecting to MongoDB...');
     const connInfo = await db.testConnection();
-    console.log(`[DB] Connected to database "${connInfo.database}" on ${connInfo.host}:${connInfo.port}`);
+    console.log(`[DB] Connected to database "${connInfo.database}" on ${connInfo.host}:${connInfo.port} (${connInfo.version})`);
 
     // 2. Start HTTP Server Listener
     server = app.listen(PORT, HOST, () => {
@@ -31,9 +31,9 @@ async function startServer() {
           console.log('[SERVER] HTTP server closed.');
           try {
             await db.closePool();
-            console.log('[DB] PostgreSQL pool closed cleanly.');
+            console.log('[DB] MongoDB connection closed cleanly.');
           } catch (dbErr) {
-            console.error('[DB] Error closing pool:', dbErr.message);
+            console.error('[DB] Error closing connection:', dbErr.message);
           }
           process.exit(0);
         });

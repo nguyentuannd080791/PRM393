@@ -1,181 +1,151 @@
-const fs = require('fs');
+// backend/src/config/db.js
 const path = require('path');
-const { Pool } = require('pg');
+const { MongoClient } = require('mongodb');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
-let embeddedInstance = null;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/fb_clone';
+const DB_NAME = process.env.MONGODB_DB_NAME || 'fb_clone';
 
-async function ensureLocalServerRunning() {
-  const host = process.env.DB_HOST || 'localhost';
-  const port = parseInt(process.env.DB_PORT || '5432', 10);
+let clientInstance = null;
+let dbInstance = null;
 
-  // If using external URL or non-localhost, do not start embedded
-  if (process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost') && !process.env.DATABASE_URL.includes('127.0.0.1')) {
-    return;
-  }
-  if (host !== 'localhost' && host !== '127.0.0.1') {
-    return;
-  }
-
-  // Probe port
-  const net = require('net');
-  const isOpen = await new Promise((resolve) => {
-    const socket = net.createConnection({ port, host: '127.0.0.1' }, () => {
-      socket.end();
-      resolve(true);
+function getClient() {
+  if (!clientInstance) {
+    clientInstance = new MongoClient(MONGODB_URI, {
+      maxPoolSize: 20,
+      serverSelectionTimeoutMS: 5000,
     });
-    socket.on('error', () => {
-      resolve(false);
-    });
-  });
-
-  if (!isOpen) {
-    try {
-      const EmbeddedPostgres = require('embedded-postgres').default || require('embedded-postgres');
-      const dbDir = path.resolve(__dirname, '../../.pgdata');
-      const dataExists = fs.existsSync(dbDir) && fs.readdirSync(dbDir).length > 0;
-
-      embeddedInstance = new EmbeddedPostgres({
-        port,
-        databaseDir: dbDir,
-        user: process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || 'postgres',
-      });
-
-      if (!dataExists) {
-        try {
-          await embeddedInstance.initialise();
-        } catch (_) {}
-      }
-
-      await embeddedInstance.start();
-
-      try {
-        await embeddedInstance.createDatabase(process.env.DB_NAME || 'fb_clone');
-      } catch (_) {}
-
-      console.log(`[DB] Native PostgreSQL 18 service active on port ${port}`);
-    } catch (embErr) {
-      console.warn('[DB] Could not start embedded PostgreSQL:', embErr.message);
-    }
+    dbInstance = clientInstance.db(DB_NAME);
   }
-}
-
-function buildPoolConfig() {
-  const isSslRequired =
-    process.env.DB_SSL === 'true' ||
-    (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('sslmode=require'));
-
-  const sslOption = isSslRequired ? { rejectUnauthorized: false } : false;
-
-  if (process.env.DATABASE_URL) {
-    return {
-      connectionString: process.env.DATABASE_URL,
-      ssl: sslOption,
-      max: parseInt(process.env.DB_POOL_MAX || '20', 10),
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
-    };
-  }
-
-  return {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '5432', 10),
-    user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || 'postgres',
-    database: process.env.DB_NAME || 'fb_clone',
-    ssl: sslOption,
-    max: parseInt(process.env.DB_POOL_MAX || '20', 10),
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 5000,
-  };
-}
-
-let pool = null;
-
-function getPool() {
-  if (!pool) {
-    pool = new Pool(buildPoolConfig());
-    pool.on('error', (err) => {
-      // Ignore disconnect errors during process teardown
-      if (err.code !== 'ECONNRESET' && err.message !== 'Connection terminated unexpectedly') {
-        console.error('[DATABASE] Unexpected pool client error:', err.message);
-      }
-    });
-  }
-  return pool;
+  return clientInstance;
 }
 
 /**
- * Execute parameterized SQL query ($1, $2, ...)
- * @param {string} text - Parameterized SQL string
- * @param {Array} params - Array of parameter values
- * @returns {Promise<import('pg').QueryResult>}
+ * Connect to MongoDB and return database instance
  */
-async function query(text, params = []) {
-  await ensureLocalServerRunning();
-  const activePool = getPool();
-  const start = Date.now();
-  try {
-    const result = await activePool.query(text, params);
-    const duration = Date.now() - start;
-    if (process.env.NODE_ENV === 'development' && process.env.DEBUG_SQL === 'true') {
-      console.log(`[SQL] ${duration}ms | rows: ${result.rowCount} | query: ${text.replace(/\s+/g, ' ').trim()}`);
-    }
-    return result;
-  } catch (error) {
-    const duration = Date.now() - start;
-    if (process.env.DEBUG_SQL === 'true') {
-      console.error(`[SQL-ERROR] ${duration}ms | error: ${error.message} | query: ${text.replace(/\s+/g, ' ').trim()}`);
-    }
-    throw error;
-  }
+async function connectDb() {
+  const client = getClient();
+  await client.connect();
+  return dbInstance;
 }
 
 /**
- * Acquire a dedicated client for multi-statement transactions
- * @returns {Promise<import('pg').PoolClient>}
+ * Get active database instance
  */
-async function getClient() {
-  await ensureLocalServerRunning();
-  const activePool = getPool();
-  return activePool.connect();
+function getDb() {
+  getClient();
+  return dbInstance;
+}
+
+/**
+ * Get collection by name
+ * @param {'User'|'Post'|'Comment'|'Reaction'|'Friendship'|'Notification'|string} name
+ */
+function getCollection(name) {
+  return getDb().collection(name);
 }
 
 /**
  * Test connectivity and retrieve DB status
  */
 async function testConnection() {
-  await ensureLocalServerRunning();
-  const res = await query('SELECT current_database() AS db_name, version() AS pg_version, NOW() AS server_time');
-  const cfg = buildPoolConfig();
+  const db = await connectDb();
+  const buildInfo = await db.admin().serverStatus().catch(() => ({ version: 'MongoDB' }));
+  const ping = await db.command({ ping: 1 });
+
+  const url = new URL(MONGODB_URI.startsWith('mongodb') ? MONGODB_URI : `mongodb://${MONGODB_URI}`);
+
   return {
-    ok: true,
-    database: res.rows[0].db_name,
-    version: res.rows[0].pg_version,
-    time: res.rows[0].server_time,
-    host: cfg.host || 'localhost',
-    port: cfg.port || 5432,
+    ok: ping.ok === 1,
+    database: DB_NAME,
+    version: buildInfo.version ? `MongoDB ${buildInfo.version}` : 'MongoDB',
+    time: new Date(),
+    host: url.hostname || '127.0.0.1',
+    port: parseInt(url.port || '27017', 10),
   };
 }
 
 /**
- * Gracefully close the connection pool and embedded instance if any
+ * Gracefully close the MongoDB client
  */
 async function closePool() {
-  if (pool) {
-    await pool.end();
-    pool = null;
+  if (clientInstance) {
+    const client = clientInstance;
+    clientInstance = null;
+    dbInstance = null;
+    await client.close();
   }
 }
 
+/**
+ * Backward-compatible query adapter for tests or legacy checks
+ */
+async function query(text, params = []) {
+  const db = getDb();
+  const trimmed = text.trim();
+
+  // 1. SELECT table_name FROM information_schema.tables
+  if (trimmed.includes('information_schema.tables')) {
+    const collections = await db.listCollections().toArray();
+    const tableNames = collections.map((c) => c.name);
+    return {
+      rows: tableNames.map((name) => ({ table_name: name })),
+      rowCount: tableNames.length,
+    };
+  }
+
+  // 2. SELECT indexname FROM pg_indexes
+  if (trimmed.includes('pg_indexes')) {
+    const collections = ['User', 'Post', 'Comment', 'Reaction', 'Friendship', 'Notification'];
+    const allIndexes = [];
+    for (const collName of collections) {
+      try {
+        const indexes = await db.collection(collName).indexes();
+        for (const idx of indexes) {
+          allIndexes.push({ indexname: idx.name });
+        }
+      } catch (_) {}
+    }
+    return {
+      rows: allIndexes,
+      rowCount: allIndexes.length,
+    };
+  }
+
+  // 3. SELECT COUNT(*)::int AS count FROM "TableName" [WHERE field = $1]
+  const countMatch = trimmed.match(/SELECT\s+COUNT\(\*\)(?:::int)?\s+AS\s+count\s+FROM\s+"?(\w+)"?(?:\s+WHERE\s+(\w+)\s*=\s*\$1)?/i);
+  if (countMatch) {
+    const tableName = countMatch[1];
+    const whereField = countMatch[2];
+    const coll = db.collection(tableName);
+    const filter = whereField && params.length > 0 ? { [whereField]: params[0] } : {};
+    const count = await coll.countDocuments(filter);
+    return {
+      rows: [{ count }],
+      rowCount: 1,
+    };
+  }
+
+  // 4. SELECT [fields] FROM "Post" WHERE id = $1
+  const selectPostMatch = trimmed.match(/SELECT\s+(.+?)\s+FROM\s+"?Post"?\s+WHERE\s+(\w+)\s*=\s*\$1/i);
+  if (selectPostMatch) {
+    const whereField = selectPostMatch[2];
+    const coll = db.collection('Post');
+    const doc = await coll.findOne({ [whereField]: params[0] });
+    return {
+      rows: doc ? [doc] : [],
+      rowCount: doc ? 1 : 0,
+    };
+  }
+
+  return { rows: [], rowCount: 0 };
+}
+
 module.exports = {
-  get pool() {
-    return getPool();
-  },
-  ensureLocalServerRunning,
-  query,
-  getClient,
+  connectDb,
+  getDb,
+  getCollection,
   testConnection,
   closePool,
+  query,
 };

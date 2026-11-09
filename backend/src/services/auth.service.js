@@ -1,7 +1,8 @@
 // backend/src/services/auth.service.js
+const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const db = require('../config/db');
+const { getCollection } = require('../config/db');
 const { AppError } = require('../middlewares/error.middleware');
 const { MSG } = require('../utils/messages');
 const {
@@ -75,7 +76,8 @@ function generateToken(user) {
 /**
  * UC01: Register Account
  */
-async function registerUser({ full_name, email, phone, password, birthday, gender, city, workplace, bio }) {
+async function registerUser({ full_name, email, phone, password, birthday, birth_date, gender, city, workplace, bio }) {
+  const userBirthday = birthday || birth_date;
   // 1. Validate full_name
   if (!full_name || typeof full_name !== 'string' || full_name.trim().length === 0) {
     throw new AppError('Full name is required.', 400);
@@ -107,20 +109,18 @@ async function registerUser({ full_name, email, phone, password, birthday, gende
   }
 
   // 4. Validate age (BR-03)
-  if (!birthday || !isAtLeast13YearsOld(birthday)) {
+  if (!userBirthday || !isAtLeast13YearsOld(userBirthday)) {
     throw new AppError('You must be at least 13 years old to register.', 400);
   }
 
-  // 5. Check uniqueness against "User" table (BR-01)
-  const existingUserCheck = await db.query(
-    `SELECT id, email, phone FROM "User" 
-     WHERE ($1::varchar IS NOT NULL AND email = $1) 
-        OR ($2::varchar IS NOT NULL AND phone = $2) 
-     LIMIT 1;`,
-    [trimmedEmail, trimmedPhone]
-  );
+  // 5. Check uniqueness against "User" collection (BR-01)
+  const userColl = getCollection('User');
+  const orConditions = [];
+  if (trimmedEmail) orConditions.push({ email: trimmedEmail });
+  if (trimmedPhone) orConditions.push({ phone: trimmedPhone });
 
-  if (existingUserCheck.rows.length > 0) {
+  const existingUser = await userColl.findOne({ $or: orConditions });
+  if (existingUser) {
     throw new AppError(MSG.ACCOUNT_EXISTS, 409); // MSG-03: 409 Conflict
   }
 
@@ -129,31 +129,36 @@ async function registerUser({ full_name, email, phone, password, birthday, gende
   const passwordHash = await bcrypt.hash(password, salt);
   const normalizedGender = normalizeGender(gender);
 
-  // 7. Insert into "User" table
-  const insertSql = `
-    INSERT INTO "User" (
-      full_name, email, phone, password_hash, birthday, gender, city, workplace, bio
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-    RETURNING id, full_name, email, phone, birthday, gender, avatar_url, cover_url, bio, city, workplace, created_at;
-  `;
+  // 7. Insert into "User" collection
+  const id = crypto.randomUUID();
+  const newUser = {
+    _id: id,
+    id,
+    full_name: full_name.trim(),
+    email: trimmedEmail,
+    phone: trimmedPhone,
+    password_hash: passwordHash,
+    birthday: new Date(userBirthday),
+    gender: normalizedGender,
+    avatar_url: null,
+    cover_url: null,
+    bio: bio ? bio.trim() : null,
+    city: city ? city.trim() : null,
+    workplace: workplace ? workplace.trim() : null,
+    created_at: new Date(),
+  };
 
-  const result = await db.query(insertSql, [
-    full_name.trim(),
-    trimmedEmail,
-    trimmedPhone,
-    passwordHash,
-    birthday,
-    normalizedGender,
-    city ? city.trim() : null,
-    workplace ? workplace.trim() : null,
-    bio ? bio.trim() : null,
-  ]);
+  await userColl.insertOne(newUser);
 
-  const newUser = result.rows[0];
-  const token = generateToken(newUser);
+  // Strip password_hash for return
+  const safeUser = { ...newUser };
+  delete safeUser.password_hash;
+  delete safeUser._id;
+
+  const token = generateToken(safeUser);
 
   return {
-    user: newUser,
+    user: safeUser,
     token,
   };
 }
@@ -171,19 +176,18 @@ async function loginUser({ identifier, email, phone, password }) {
   checkLockout(targetIdentifier);
 
   // 2. Query user by email or phone
-  const userResult = await db.query(
-    `SELECT * FROM "User" 
-     WHERE email = LOWER($1) OR phone = $1 
-     LIMIT 1;`,
-    [targetIdentifier]
-  );
+  const userColl = getCollection('User');
+  const user = await userColl.findOne({
+    $or: [
+      { email: targetIdentifier.toLowerCase() },
+      { phone: targetIdentifier },
+    ],
+  });
 
-  if (userResult.rows.length === 0) {
+  if (!user) {
     recordFailedLogin(targetIdentifier);
     throw new AppError(MSG.INVALID_CREDENTIALS, 401); // MSG-04: 401 Unauthorized
   }
-
-  const user = userResult.rows[0];
 
   // 3. Verify bcrypt password hash
   const isMatch = await bcrypt.compare(password, user.password_hash);
@@ -195,8 +199,10 @@ async function loginUser({ identifier, email, phone, password }) {
   // 4. Success: clear failed login counter
   clearFailedLogin(targetIdentifier);
 
-  // 5. Exclude password_hash from response
+  // 5. Exclude password_hash and internal fields
   delete user.password_hash;
+  delete user._id;
+
   const token = generateToken(user);
 
   return {
@@ -226,14 +232,18 @@ async function forgotPassword({ identifier, email, new_password }) {
     const salt = await bcrypt.genSalt(10);
     const newHash = await bcrypt.hash(new_password, salt);
 
-    const updateRes = await db.query(
-      `UPDATE "User" SET password_hash = $1 
-       WHERE email = LOWER($2) OR phone = $2 
-       RETURNING id;`,
-      [newHash, targetIdentifier]
+    const userColl = getCollection('User');
+    const updateRes = await userColl.updateOne(
+      {
+        $or: [
+          { email: targetIdentifier.toLowerCase() },
+          { phone: targetIdentifier },
+        ],
+      },
+      { $set: { password_hash: newHash } }
     );
 
-    if (updateRes.rows.length === 0) {
+    if (updateRes.matchedCount === 0) {
       throw new AppError('User not found with provided identifier.', 404);
     }
 
@@ -248,18 +258,16 @@ async function forgotPassword({ identifier, email, new_password }) {
  * UC05: Get Current User Profile (GET /api/auth/me)
  */
 async function getCurrentUserProfile(userId) {
-  const result = await db.query(
-    `SELECT id, full_name, email, phone, birthday, gender, avatar_url, cover_url, bio, city, workplace, created_at 
-     FROM "User" 
-     WHERE id = $1;`,
-    [userId]
-  );
+  const userColl = getCollection('User');
+  const user = await userColl.findOne({ id: userId });
 
-  if (result.rows.length === 0) {
+  if (!user) {
     throw new AppError('User profile not found.', 404);
   }
 
-  return result.rows[0];
+  delete user.password_hash;
+  delete user._id;
+  return user;
 }
 
 module.exports = {
