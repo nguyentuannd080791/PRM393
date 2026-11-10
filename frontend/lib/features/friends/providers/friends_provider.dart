@@ -57,6 +57,41 @@ class FriendshipActions extends Notifier<Set<String>> {
     () => ref.read(friendsRepositoryProvider).changeRequest(id, action),
   );
 
+  Future<void> cancel(String targetUserIdOrRequestId) async {
+    final sent = await ref.read(sentRequestsProvider.future);
+    final match = sent
+        .where((r) => r.id == targetUserIdOrRequestId || r.user.id == targetUserIdOrRequestId)
+        .firstOrNull;
+    final id = match != null ? match.id : targetUserIdOrRequestId;
+    await change(id, 'cancel');
+  }
+
+  Future<void> accept(String targetUserIdOrRequestId) async {
+    final received = await ref.read(receivedRequestsProvider.future);
+    final match = received
+        .where((r) => r.id == targetUserIdOrRequestId || r.user.id == targetUserIdOrRequestId)
+        .firstOrNull;
+    final id = match != null ? match.id : targetUserIdOrRequestId;
+    await change(id, 'accept');
+  }
+
+  Future<void> reject(String targetUserIdOrRequestId) async {
+    final received = await ref.read(receivedRequestsProvider.future);
+    final match = received
+        .where((r) => r.id == targetUserIdOrRequestId || r.user.id == targetUserIdOrRequestId)
+        .firstOrNull;
+    final id = match != null ? match.id : targetUserIdOrRequestId;
+    await change(id, 'decline');
+  }
+
+  Future<void> unfriend(String userId) async {
+    if (ref.mounted) {
+      ref.invalidate(friendsProvider);
+      ref.invalidate(receivedRequestsProvider);
+      ref.invalidate(sentRequestsProvider);
+    }
+  }
+
   Future<void> _run(String key, Future<void> Function() action) async {
     if (state.contains(key)) return;
     state = {...state, key};

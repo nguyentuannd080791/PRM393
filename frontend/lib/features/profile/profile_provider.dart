@@ -1,6 +1,2 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'profile_repository.dart';
-
-/// Override when this team feature is integrated.
-final profileRepositoryProvider = Provider<ProfileRepository?>((ref) => null);
+export 'profile_repository.dart';
+export 'presentation/providers/profile_providers.dart';

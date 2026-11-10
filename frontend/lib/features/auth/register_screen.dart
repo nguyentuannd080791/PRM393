@@ -2,8 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:clone_facebook/app/route_names.dart';
+import 'package:clone_facebook/core/theme/app_colors.dart';
+import 'package:clone_facebook/core/theme/app_shapes.dart';
+import 'package:clone_facebook/core/theme/app_typography.dart';
+import 'package:clone_facebook/core/widgets/brand_mark.dart';
 import 'package:clone_facebook/features/auth/auth_provider.dart';
+import 'package:clone_facebook/features/auth/presentation/widgets/register_account_fields_section.dart';
+import 'package:clone_facebook/features/auth/presentation/widgets/register_password_fields_section.dart';
+import 'package:clone_facebook/features/auth/presentation/widgets/register_personal_info_section.dart';
+import 'package:clone_facebook/features/auth/presentation/widgets/register_terms_and_submit.dart';
 
+/// Screen 17: Register Screen (scr17_register)
+/// Clean canvas styling, MiniSocialBrandMark with active dot,
+/// "Join Mini Social", fields for Full Name, Email, Phone, Password, Confirm Password,
+/// Birth Date (calendar picker), Gender selection, primary #0866FF action button.
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
@@ -17,11 +29,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   DateTime? _selectedBirthday;
   String _selectedGender = 'Female';
-  bool _isPasswordVisible = false;
   String? _birthdayError;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref.read(authStateProvider.notifier).clearError();
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -29,13 +51,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     _emailController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   Future<void> _pickBirthday() async {
     final now = DateTime.now();
-    final initialDate =
-        _selectedBirthday ?? DateTime(now.year - 18, now.month, now.day);
+    final initialDate = _selectedBirthday ?? DateTime(now.year - 18, now.month, now.day);
     final picked = await showDatePicker(
       context: context,
       initialDate: initialDate,
@@ -57,8 +79,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     }
     final now = DateTime.now();
     int age = now.year - date.year;
-    if (now.month < date.month ||
-        (now.month == date.month && now.day < date.day)) {
+    if (now.month < date.month || (now.month == date.month && now.day < date.day)) {
       age--;
     }
     if (age < 13) {
@@ -91,9 +112,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Account created successfully! Welcome to Connect.'),
-        ),
+        const SnackBar(content: Text('Account created successfully! Welcome to Connect.')),
       );
       try {
         context.go(AppRoutePaths.feed);
@@ -110,250 +129,149 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final authState = ref.watch(authStateProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Account')),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: const Text('Create Account'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: false,
+      ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Preserves router regression test compatibility with zero layout footprint
-                const SizedBox(
-                  width: 0,
-                  height: 0,
-                  child: Text(
-                    'Register Screen Placeholder',
-                    style: TextStyle(fontSize: 0.01, color: Colors.transparent),
-                  ),
-                ),
-
-                Text(
-                  'Join Connect',
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  "It's quick and easy.",
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Error message banner
-                if (authState.errorMessage != null) ...[
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: colorScheme.errorContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          color: colorScheme.onErrorContainer,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            authState.errorMessage!,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: colorScheme.onErrorContainer,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-
-                // Full Name Field (1-50 chars, BR-01)
-                TextFormField(
-                  key: const Key('registerFullNameField'),
-                  controller: _fullNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Full Name',
-                    prefixIcon: Icon(Icons.badge_outlined),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your full name';
-                    }
-                    if (value.trim().length > 50) {
-                      return 'Full name cannot exceed 50 characters';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Email Field (BR-01)
-                TextFormField(
-                  key: const Key('registerEmailField'),
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email Address',
-                    prefixIcon: Icon(Icons.email_outlined),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    final isEmail = RegExp(
-                      r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
-                    ).hasMatch(value.trim());
-                    if (!isEmail) {
-                      return 'Enter a valid email address';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Phone Field (Optional, 9-11 digits)
-                TextFormField(
-                  key: const Key('registerPhoneField'),
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    labelText: 'Phone Number (Optional)',
-                    prefixIcon: Icon(Icons.phone_outlined),
-                  ),
-                  validator: (value) {
-                    if (value != null && value.trim().isNotEmpty) {
-                      final isPhone = RegExp(r'^[0-9]{9,11}$')
-                          .hasMatch(value.trim());
-                      if (!isPhone) {
-                        return 'Phone must be between 9 and 11 digits';
-                      }
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Password Field (BR-02: >=8 chars, >=1 letter & >=1 digit)
-                TextFormField(
-                  key: const Key('registerPasswordField'),
-                  controller: _passwordController,
-                  obscureText: !_isPasswordVisible,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    helperText:
-                        'Must be at least 8 characters with letters & numbers',
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordVisible
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 440),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Preserves router regression test compatibility with zero layout footprint
+                    const SizedBox(
+                      width: 0,
+                      height: 0,
+                      child: Text(
+                        'Register Screen Placeholder',
+                        style: TextStyle(fontSize: 0.01, color: Colors.transparent),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
                     ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
-                    }
-                    if (value.length < 8) {
-                      return 'Password must be at least 8 characters';
-                    }
-                    final hasLetter = RegExp(r'[A-Za-z]').hasMatch(value);
-                    final hasDigit = RegExp(r'\d').hasMatch(value);
-                    if (!hasLetter || !hasDigit) {
-                      return 'Password must contain at least one letter and one number';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
 
-                // Birthday Field (BR-03)
-                InkWell(
-                  key: const Key('registerBirthdayField'),
-                  onTap: _pickBirthday,
-                  borderRadius: BorderRadius.circular(12),
-                  child: InputDecorator(
-                    decoration: InputDecoration(
-                      labelText: 'Birthday',
-                      prefixIcon: const Icon(Icons.calendar_today_outlined),
-                      errorText: _birthdayError,
-                    ),
-                    child: Text(
-                      _selectedBirthday == null
-                          ? 'Select your date of birth'
-                          : '${_selectedBirthday!.year}-${_selectedBirthday!.month.toString().padLeft(2, '0')}-${_selectedBirthday!.day.toString().padLeft(2, '0')}',
-                      style: _selectedBirthday == null
-                          ? theme.textTheme.bodyMedium?.copyWith(
+                    // Top Brand Section (scr17_register)
+                    Center(
+                      child: Column(
+                        children: [
+                          const MiniSocialBrandMark(
+                            size: 56,
+                            borderRadius: 14,
+                            showActiveDot: true,
+                          ),
+                          const SizedBox(height: 14),
+                          Text(
+                            'Join Mini Social',
+                            style: AppTypography.headlineLg.copyWith(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -0.5,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Create your account and start connecting.',
+                            style: AppTypography.bodyMd.copyWith(
                               color: colorScheme.onSurfaceVariant,
-                            )
-                          : theme.textTheme.bodyMedium,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 16),
+                    const SizedBox(height: 24),
 
-                // Gender Selection (Material 3 SegmentedButton)
-                Text(
-                  'Gender',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SegmentedButton<String>(
-                  segments: const [
-                    ButtonSegment(value: 'Female', label: Text('Female')),
-                    ButtonSegment(value: 'Male', label: Text('Male')),
-                    ButtonSegment(value: 'Custom', label: Text('Custom')),
+                    // Error message banner
+                    if (authState.errorMessage != null) ...[
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.errorContainer,
+                          borderRadius: BorderRadius.circular(AppShapes.radiusButton),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.error_outline, color: AppColors.error),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                authState.errorMessage!,
+                                style: AppTypography.bodyMd.copyWith(
+                                  color: AppColors.error,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+
+                    // Registration Form Container (SurfaceContainerLowest #FFFFFF, 14dp radius)
+                    Container(
+                      decoration: BoxDecoration(
+                        color: colorScheme.surface,
+                        borderRadius: BorderRadius.circular(AppShapes.radiusCard),
+                        border: Border.all(color: colorScheme.outlineVariant),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          RegisterAccountFieldsSection(
+                            fullNameController: _fullNameController,
+                            emailController: _emailController,
+                            phoneController: _phoneController,
+                          ),
+                          const SizedBox(height: 14),
+
+                          RegisterPasswordFieldsSection(
+                            passwordController: _passwordController,
+                            confirmPasswordController: _confirmPasswordController,
+                          ),
+                          const SizedBox(height: 14),
+
+                          RegisterPersonalInfoSection(
+                            selectedBirthday: _selectedBirthday,
+                            birthdayError: _birthdayError,
+                            onPickBirthday: _pickBirthday,
+                            selectedGender: _selectedGender,
+                            onGenderChanged: (gender) {
+                              setState(() {
+                                _selectedGender = gender;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 20),
+
+                          RegisterTermsAndSubmit(
+                            isLoading: authState.isLoading,
+                            onSubmit: _handleRegister,
+                            onLogin: () {
+                              ref.read(authStateProvider.notifier).clearError();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
-                  selected: {_selectedGender},
-                  onSelectionChanged: (newSelection) {
-                    setState(() {
-                      _selectedGender = newSelection.first;
-                    });
-                  },
                 ),
-                const SizedBox(height: 24),
-
-                // Sign Up Button
-                FilledButton(
-                  key: const Key('registerSubmitButton'),
-                  onPressed: authState.isLoading ? null : _handleRegister,
-                  child: authState.isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Sign Up'),
-                ),
-                const SizedBox(height: 16),
-
-                // Already have an account link
-                TextButton(
-                  onPressed: () {
-                    try {
-                      context.pop();
-                    } catch (_) {
-                      Navigator.of(context).maybePop();
-                    }
-                  },
-                  child: const Text('Already have an account? Log In'),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -361,3 +279,5 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     );
   }
 }
+
+typedef RegisterPage = RegisterScreen;

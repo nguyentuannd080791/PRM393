@@ -9,6 +9,7 @@ const {
   isValidEmail,
   isValidPhone,
   isValidPassword,
+  isValidBio,
   isAtLeast13YearsOld,
   normalizeGender,
 } = require('../utils/validation');
@@ -108,6 +109,13 @@ async function registerUser({ full_name, email, phone, password, birthday, birth
     );
   }
 
+  // Validate bio if provided (BR-14)
+  if (bio !== undefined && bio !== null) {
+    if (!isValidBio(bio)) {
+      throw new AppError('Bio cannot exceed 150 characters.', 400);
+    }
+  }
+
   // 4. Validate age (BR-03)
   if (!userBirthday || !isAtLeast13YearsOld(userBirthday)) {
     throw new AppError('You must be at least 13 years old to register.', 400);
@@ -145,6 +153,7 @@ async function registerUser({ full_name, email, phone, password, birthday, birth
     bio: bio ? bio.trim() : null,
     city: city ? city.trim() : null,
     workplace: workplace ? workplace.trim() : null,
+    saved_post_ids: [],
     created_at: new Date(),
   };
 
@@ -270,10 +279,48 @@ async function getCurrentUserProfile(userId) {
   return user;
 }
 
+/**
+ * Change Password
+ */
+async function changePassword(userId, { current_password, new_password } = {}) {
+  if (!current_password || !new_password) {
+    throw new AppError('Current password and new password are required.', 400);
+  }
+
+  if (!isValidPassword(new_password)) {
+    throw new AppError(
+      'Password must be at least 8 characters with at least one letter and one number.',
+      400
+    );
+  }
+
+  const userColl = getCollection('User');
+  const user = await userColl.findOne({ id: userId });
+  if (!user) {
+    throw new AppError('User not found.', 404);
+  }
+
+  const isMatch = await bcrypt.compare(current_password, user.password_hash);
+  if (!isMatch) {
+    throw new AppError('Current password is incorrect.', 400);
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const passwordHash = await bcrypt.hash(new_password, salt);
+
+  await userColl.updateOne(
+    { id: userId },
+    { $set: { password_hash: passwordHash } }
+  );
+
+  return { message: 'Password updated successfully' };
+}
+
 module.exports = {
   registerUser,
   loginUser,
   forgotPassword,
+  changePassword,
   getCurrentUserProfile,
   checkLockout,
   recordFailedLogin,

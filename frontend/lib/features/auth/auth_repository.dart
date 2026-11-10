@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/models/app_models.dart';
@@ -83,12 +84,23 @@ class AuthRepository {
       await _tokenStorage.saveUser(user);
       return user;
     } catch (e) {
-      if (e is ApiException && e.statusCode == 401) {
+      if ((e is ApiException && e.statusCode == 401) ||
+          (e is DioException && e.response?.statusCode == 401)) {
         await _tokenStorage.clearAll();
         return null;
       }
       return _tokenStorage.getUser();
     }
+  }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    await _apiClient.post('/auth/change-password', data: {
+      'current_password': currentPassword,
+      'new_password': newPassword,
+    });
   }
 
   Future<String> forgotPassword(
