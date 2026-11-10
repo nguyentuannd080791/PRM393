@@ -21,7 +21,7 @@ class AppConstants {
   static const int minimumUserAgeYears = 13;
 
   // Messages (SRS Section III & IV)
-  static const String msgContentUnavailable = 'This content is no longer available.';
+  static const String msgContentUnavailable = 'Nội dung này hiện không khả dụng';
   static const String msgGenericError = 'Something went wrong. Please try again.';
   static const String msgNetworkError = 'Network error. Please check your connection.';
   static const String msgLoginFailed = 'Invalid email/phone or password.';

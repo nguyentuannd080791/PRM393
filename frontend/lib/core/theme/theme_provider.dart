@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:clone_facebook/core/storage/preferences_provider.dart';
 
-/// Manages app ThemeMode (ThemeMode.dark vs ThemeMode.light).
-/// Strictly satisfies BR-21: Default mode at launch is ThemeMode.dark.
+/// Manages app ThemeMode (ThemeMode.light vs ThemeMode.dark).
+/// Default mode at launch is ThemeMode.light per R2.1.
 class ThemeModeNotifier extends Notifier<ThemeMode> {
   static const String prefKey = 'theme_mode';
 
@@ -11,16 +11,14 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
   ThemeMode build() {
     final prefs = ref.watch(sharedPreferencesProvider);
     if (prefs == null) {
-      // Fallback for tests or un-overridden scopes (BR-21 dark default)
-      return ThemeMode.dark;
+      return ThemeMode.light;
     }
 
     final savedMode = prefs.getString(prefKey);
-    if (savedMode == 'light') {
-      return ThemeMode.light;
+    if (savedMode == 'dark') {
+      return ThemeMode.dark;
     }
-    // BR-21: Mandatory default is dark mode!
-    return ThemeMode.dark;
+    return ThemeMode.light;
   }
 
   /// Sets a specific ThemeMode and persists choice to SharedPreferences.

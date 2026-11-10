@@ -2,8 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:clone_facebook/core/theme/app_colors.dart';
+import 'package:clone_facebook/core/theme/app_shapes.dart';
+import 'package:clone_facebook/core/theme/app_typography.dart';
 import 'package:clone_facebook/data/repositories/auth_repository.dart';
 
+/// Screen: Forgot Password Page (UC04 / BR-05)
+/// Clean canvas styling, Mini Social tokens, 10-14dp radii,
+/// connected to authRepository.forgotPassword(email),
+/// retains all test keys and anti-enumeration behavior.
 class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({super.key});
 
@@ -81,138 +88,229 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Find Your Account'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: false,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Preserves router regression test compatibility with zero layout footprint
-                const SizedBox(
-                  width: 0,
-                  height: 0,
-                  child: Text(
-                    'Forgot Password Placeholder',
-                    style: TextStyle(fontSize: 0.01, color: Colors.transparent),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-                Icon(
-                  Icons.lock_reset_outlined,
-                  size: 64,
-                  color: colorScheme.primary,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Password Assistance',
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Enter your email address and we will send you a link to reset your password.',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
-
-                // Success Message Banner (BR-05, MSG-03/06)
-                if (_successBannerVisible) ...[
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(12),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Preserves router regression test compatibility with zero layout footprint
+                    const SizedBox(
+                      width: 0,
+                      height: 0,
+                      child: Text(
+                        'Forgot Password Placeholder',
+                        style: TextStyle(fontSize: 0.01, color: Colors.transparent),
+                      ),
                     ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.mark_email_read_outlined,
-                          color: colorScheme.onPrimaryContainer,
-                          size: 28,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'If the email is registered, a reset link has been sent.',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: colorScheme.onPrimaryContainer,
-                              fontWeight: FontWeight.w600,
+
+                    // Top Icon & Title Block
+                    Center(
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 64,
+                            height: 64,
+                            decoration: BoxDecoration(
+                              color: AppColors.softBlueSurface,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: colorScheme.outlineVariant),
+                            ),
+                            child: const Icon(
+                              Icons.lock_reset_outlined,
+                              size: 34,
+                              color: AppColors.primaryAction,
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 16),
+                          Text(
+                            'Password Assistance',
+                            style: AppTypography.headlineMd.copyWith(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Enter your email address and we will send you a link to reset your password.',
+                            style: AppTypography.bodyMd.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+                    const SizedBox(height: 24),
 
-                // Email Input Field
-                TextFormField(
-                  key: const Key('forgotPasswordEmailField'),
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Registered Email Address',
-                    prefixIcon: Icon(Icons.email_outlined),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your email address';
-                    }
-                    final isEmail = RegExp(
-                      r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
-                    ).hasMatch(value.trim());
-                    if (!isEmail) {
-                      return 'Enter a valid email address';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 24),
-
-                // Submit Button
-                FilledButton(
-                  key: const Key('forgotPasswordSubmitButton'),
-                  onPressed: (_isSubmitting || _cooldownSeconds > 0)
-                      ? null
-                      : _handleSubmit,
-                  child: _isSubmitting
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text(
-                          _cooldownSeconds > 0
-                              ? 'Resend available in ${_cooldownSeconds}s'
-                              : 'Send Reset Link',
+                    // Success Message Banner (BR-05, MSG-03/06)
+                    if (_successBannerVisible) ...[
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.softBlueSurface,
+                          borderRadius: BorderRadius.circular(AppShapes.radiusCard),
+                          border: Border.all(color: AppColors.primaryFixed),
                         ),
-                ),
-                const SizedBox(height: 16),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.mark_email_read_outlined,
+                              color: AppColors.primaryAction,
+                              size: 24,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'If the email is registered, a reset link has been sent.',
+                                style: AppTypography.bodyMd.copyWith(
+                                  color: AppColors.primaryAction,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
 
-                // Back to Login Link
-                TextButton(
-                  onPressed: () {
-                    try {
-                      context.pop();
-                    } catch (_) {
-                      Navigator.of(context).maybePop();
-                    }
-                  },
-                  child: const Text('Back to Log In'),
+                    // Form Card
+                    Container(
+                      decoration: BoxDecoration(
+                        color: colorScheme.surface,
+                        borderRadius: BorderRadius.circular(AppShapes.radiusCard),
+                        border: Border.all(color: colorScheme.outlineVariant),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Email Input Field
+                          TextFormField(
+                            key: const Key('forgotPasswordEmailField'),
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            style: AppTypography.bodyMd.copyWith(color: colorScheme.onSurface),
+                            decoration: InputDecoration(
+                              labelText: 'Registered Email Address',
+                              labelStyle: AppTypography.bodyMd.copyWith(color: colorScheme.onSurfaceVariant),
+                              hintText: 'name@example.com',
+                              hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.slate400),
+                              prefixIcon: Icon(Icons.email_outlined, color: colorScheme.onSurfaceVariant, size: 20),
+                              filled: true,
+                              fillColor: colorScheme.surfaceContainerLow,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(AppShapes.radiusInput),
+                                borderSide: BorderSide(color: colorScheme.outlineVariant),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(AppShapes.radiusInput),
+                                borderSide: BorderSide(color: colorScheme.outlineVariant),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(AppShapes.radiusInput),
+                                borderSide: const BorderSide(color: AppColors.primaryAction, width: 1.5),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please enter your email address';
+                              }
+                              final isEmail = RegExp(
+                                r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
+                              ).hasMatch(value.trim());
+                              if (!isEmail) {
+                                return 'Enter a valid email address';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Submit Button
+                          SizedBox(
+                            height: 48,
+                            child: FilledButton(
+                              key: const Key('forgotPasswordSubmitButton'),
+                              onPressed: (_isSubmitting || _cooldownSeconds > 0)
+                                  ? null
+                                  : _handleSubmit,
+                              style: FilledButton.styleFrom(
+                                backgroundColor: AppColors.primaryAction,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(AppShapes.radiusButton),
+                                ),
+                                elevation: 0,
+                              ),
+                              child: _isSubmitting
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                      ),
+                                    )
+                                  : Text(
+                                      _cooldownSeconds > 0
+                                          ? 'Resend available in ${_cooldownSeconds}s'
+                                          : 'Send Reset Link',
+                                      style: AppTypography.labelLg.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Back to Log In Link
+                    Center(
+                      child: TextButton(
+                        onPressed: () {
+                          try {
+                            context.pop();
+                          } catch (_) {
+                            Navigator.of(context).maybePop();
+                          }
+                        },
+                        child: Text(
+                          'Back to Log In',
+                          style: AppTypography.labelMd.copyWith(
+                            color: AppColors.primaryAction,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

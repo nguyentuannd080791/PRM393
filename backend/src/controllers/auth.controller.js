@@ -38,6 +38,16 @@ async function forgotPassword(req, res, next) {
   }
 }
 
+async function changePassword(req, res, next) {
+  try {
+    const { current_password, new_password } = req.body;
+    const result = await authService.changePassword(req.user.userId, { current_password, new_password });
+    return successResponse(res, null, 200, result.message || 'Password updated successfully');
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function getMe(req, res, next) {
   try {
     const user = await authService.getCurrentUserProfile(req.user.userId);
@@ -52,5 +62,6 @@ module.exports = {
   login,
   logout,
   forgotPassword,
+  changePassword,
   getMe,
 };
