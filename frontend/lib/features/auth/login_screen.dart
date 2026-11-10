@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:clone_facebook/app/route_names.dart';
@@ -11,7 +12,7 @@ import 'package:clone_facebook/features/auth/auth_provider.dart';
 /// Screen 16: Login Screen (scr16_login)
 /// Blank canvas styling (#F8F9FF), MiniSocialBrandMark at top,
 /// "Mini Social", text inputs with #EFF3FF fill, 10dp radius, #E4EAF2 border,
-/// primary #0866FF 48dp action button, links for Register and Forgot Password.
+/// primary #0866FF 48dp action button, link for Register.
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -189,11 +190,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           // Email or Phone Field (BR-01)
                           TextFormField(
                             key: const Key('loginEmailField'),
+maxLength: 16,
+inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9+]'))],
                             controller: _identifierController,
                             enabled: !authState.isLoading && !authState.isLockedOut,
                             keyboardType: TextInputType.phone,
                             style: AppTypography.bodyMd.copyWith(color: colorScheme.onSurface),
                             decoration: InputDecoration(
+counterText: '',
                               labelText: 'Phone Number',
                               labelStyle: AppTypography.bodyMd.copyWith(color: colorScheme.onSurfaceVariant),
                               hintText: '0912345678',
@@ -231,11 +235,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           // Password Field (BR-02)
                           TextFormField(
                             key: const Key('loginPasswordField'),
+maxLength: 128,
                             controller: _passwordController,
                             enabled: !authState.isLoading && !authState.isLockedOut,
                             obscureText: !_isPasswordVisible,
                             style: AppTypography.bodyMd.copyWith(color: colorScheme.onSurface),
                             decoration: InputDecoration(
+counterText: '',
                               labelText: 'Password',
                               labelStyle: AppTypography.bodyMd.copyWith(color: colorScheme.onSurfaceVariant),
                               hintText: '••••••••',
@@ -278,33 +284,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 6),
-
-                          // Forgot Password Link
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              key: const Key('loginForgotPasswordButton'),
-                              onPressed: authState.isLoading
-                                  ? null
-                                  : () {
-                                      ref.read(authStateProvider.notifier).clearError();
-                                      context.push(AppRoutePaths.forgotPassword);
-                                    },
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                                visualDensity: VisualDensity.compact,
-                              ),
-                              child: Text(
-                                'Forgot password?',
-                                style: AppTypography.labelSm.copyWith(
-                                  color: AppColors.primaryAction,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 14),
+                          const SizedBox(height: 20),
 
                           // Log In Button (Primary #0866FF, 48dp)
                           SizedBox(

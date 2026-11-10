@@ -74,7 +74,7 @@ async function sendRequest(viewer, receiverId) {
   };
   if (existing) {
     if (['pending', 'accepted'].includes(existing.status)) {
-      throw new AppError('A friendship or pending request already exists. Check Received requests.', 409);
+      throw new AppError('Request already exists.', 409);
     }
     // Compare-and-set also prevents two concurrent retries or stale actions succeeding.
     const result = await collection.updateOne(
@@ -84,7 +84,7 @@ async function sendRequest(viewer, receiverId) {
     try {
       await collection.insertOne({ _id: fields.id, ...fields });
     } catch (error) {
-      if (error.code === 11000) throw new AppError('A pending request already exists.', 409);
+      if (error.code === 11000) throw new AppError('Request already exists.', 409);
       throw error;
     }
   }

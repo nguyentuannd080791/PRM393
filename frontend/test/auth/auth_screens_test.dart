@@ -64,11 +64,21 @@ void main() {
       await tapKey(tester, 'loginSubmitButton');
       expect(find.text('Please enter the required information.'), findsWidgets);
 
-      await fill(tester, 'loginEmailField', 'abc');
+      await fill(tester, 'loginEmailField', '123');
       await fill(tester, 'loginPasswordField', 'abcd1234');
       await tapKey(tester, 'loginSubmitButton');
       expect(find.textContaining('valid phone number'), findsOneWidget);
       expect(RecordingAuth.calls, isEmpty);
+    });
+
+    testWidgets('phone field only accepts digits and +, max 16 characters', (
+      tester,
+    ) async {
+      await pumpScreen(tester, const LoginScreen());
+      await fill(tester, 'loginEmailField', 'ab 09-12.34x5678');
+      expect(find.text('0912345678'), findsWidgets);
+      await fill(tester, 'loginEmailField', '+8412345678901234567890');
+      expect(find.text('+841234567890123'), findsWidgets);
     });
 
     testWidgets('submits phone and password', (tester) async {

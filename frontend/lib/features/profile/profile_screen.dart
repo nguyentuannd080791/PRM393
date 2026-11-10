@@ -92,7 +92,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Log Out'),
-        content: const Text('Are you sure you want to log out of Connect?'),
+        content: const Text('Are you sure you want to log out of Mini Social?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),

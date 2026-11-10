@@ -1,11 +1,11 @@
 {
-    "name": "clone_facebook",
-    "short_name": "clone_facebook",
+    "name": "Mini Social",
+    "short_name": "Mini Social",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Mini Social - a text-only social network.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -58,12 +58,10 @@ ApiException mapDioException(DioException error) {
   }
   if (error.type == DioExceptionType.connectionTimeout ||
       error.type == DioExceptionType.receiveTimeout) {
-    return ApiException('Connection timed out. Please check your network.');
+    return ApiException('Unable to connect. Please try again.');
   }
   if (error.type == DioExceptionType.connectionError) {
-    return ApiException(
-      'Could not connect to the server. Please check your connection.',
-    );
+    return ApiException('Unable to connect. Please try again.');
   }
   return ApiException(error.message ?? 'An unexpected network error occurred.');
 }
@@ -87,8 +85,7 @@ class AuthInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401 &&
-        !err.requestOptions.path.contains('/auth/login') &&
-        !err.requestOptions.path.contains('/auth/forgot-password')) {
+        !err.requestOptions.path.contains('/auth/login')) {
       try {
         await _tokenStorage.clearAll();
       } catch (_) {}

@@ -60,7 +60,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created successfully! Welcome to Connect.')),
+        const SnackBar(content: Text('Account created successfully! Welcome to Mini Social.')),
       );
       try {
         context.go(AppRoutePaths.feed);

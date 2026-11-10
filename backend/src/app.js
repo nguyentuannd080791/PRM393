@@ -16,9 +16,9 @@ app.use(
   })
 );
 
-// 2. Body Parser Configuration (10MB limit per BR-09)
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// 2. Body parsers: text-only app (no uploads), so keep requests small.
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
 // 3. Health Check Endpoint
 app.get('/api/health', (req, res) => {

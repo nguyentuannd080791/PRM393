@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:clone_facebook/core/theme/app_colors.dart';
 import 'package:clone_facebook/core/theme/app_shapes.dart';
 import 'package:clone_facebook/core/theme/app_typography.dart';
@@ -23,9 +24,11 @@ class RegisterAccountFieldsSection extends StatelessWidget {
         // Full Name Field (1-50 chars, BR-01)
         TextFormField(
           key: const Key('registerFullNameField'),
+maxLength: 50,
           controller: fullNameController,
           style: AppTypography.bodyMd.copyWith(color: colorScheme.onSurface),
           decoration: InputDecoration(
+counterText: '',
             labelText: 'Full Name',
             labelStyle: AppTypography.bodyMd.copyWith(color: colorScheme.onSurfaceVariant),
             hintText: 'e.g. An Nguyen',
@@ -62,10 +65,13 @@ class RegisterAccountFieldsSection extends StatelessWidget {
         // Phone Field (required, unique: BR01)
         TextFormField(
           key: const Key('registerPhoneField'),
+maxLength: 16,
+inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9+]'))],
           controller: phoneController,
           keyboardType: TextInputType.phone,
           style: AppTypography.bodyMd.copyWith(color: colorScheme.onSurface),
           decoration: InputDecoration(
+counterText: '',
             labelText: 'Phone Number',
             labelStyle: AppTypography.bodyMd.copyWith(color: colorScheme.onSurfaceVariant),
             hintText: '+84 912 345 678',

@@ -29,15 +29,6 @@ async function logout(req, res, next) {
   }
 }
 
-async function forgotPassword(req, res, next) {
-  try {
-    const result = await authService.forgotPassword(req.body);
-    return successResponse(res, null, 200, result.message);
-  } catch (err) {
-    next(err);
-  }
-}
-
 async function changePassword(req, res, next) {
   try {
     const { current_password, new_password } = req.body;
@@ -61,7 +52,6 @@ module.exports = {
   register,
   login,
   logout,
-  forgotPassword,
   changePassword,
   getMe,
 };

@@ -84,14 +84,6 @@ class FriendshipActions extends Notifier<Set<String>> {
     await change(id, 'decline');
   }
 
-  Future<void> unfriend(String userId) async {
-    if (ref.mounted) {
-      ref.invalidate(friendsProvider);
-      ref.invalidate(receivedRequestsProvider);
-      ref.invalidate(sentRequestsProvider);
-    }
-  }
-
   Future<void> _run(String key, Future<void> Function() action) async {
     if (state.contains(key)) return;
     state = {...state, key};

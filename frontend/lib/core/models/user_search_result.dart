@@ -47,7 +47,7 @@ class UserSearchResult extends UserModel {
 
   factory UserSearchResult.fromJson(Map<String, dynamic> json) => UserSearchResult(
     id: json['id'].toString(),
-    fullName: json['full_name'] as String? ?? json['fullName'] as String? ?? 'Facebook User',
+    fullName: json['full_name'] as String? ?? json['fullName'] as String? ?? 'Unknown user',
     email: json['email'] as String? ?? '',
     phone: json['phone'] as String?,
     passwordHash: json['password_hash'] as String? ?? '',

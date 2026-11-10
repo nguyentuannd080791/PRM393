@@ -98,7 +98,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         // Saved: nothing is unsaved any more, so the PopScope guard must not block closing.
         setState(() => _isDirty = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated.')),
+          const SnackBar(content: Text('Changes saved successfully.')),
         );
         await WidgetsBinding.instance.endOfFrame; // let PopScope(canPop: true) rebuild first
         if (!mounted) return;
@@ -287,7 +287,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '${_nameController.text.length} / 30',
+                                    '${_nameController.text.length} / 50',
                                     style: AppTypography.captionSm.copyWith(
                                       color: colorScheme.onSurfaceVariant,
                                     ),
@@ -300,7 +300,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                               TextFormField(
                                 key: const Key('edit_name_field'),
                                 controller: _nameController,
-                                maxLength: 30,
+                                maxLength: 50,
                                 style: AppTypography.bodyMd.copyWith(color: colorScheme.onSurface),
                                 decoration: InputDecoration(
                                   counterText: '',

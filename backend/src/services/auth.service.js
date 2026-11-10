@@ -58,6 +58,16 @@ function clearFailedLogin(identifier) {
   loginAttempts.delete(identifier.toLowerCase().trim());
 }
 
+
+// Every client-supplied field must be a string of sane length before any .trim()/bcrypt call.
+const CONTROL_CHARS = /[\u0000-\u001f\u007f]/;
+function text(value, field, max) {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value !== 'string') throw new AppError(`${field} must be text.`, 400);
+  if (value.length > max) throw new AppError(`${field} is too long (max ${max} characters).`, 400);
+  return value;
+}
+
 /**
  * Generate JWT token for authenticated user
  */
@@ -78,13 +88,24 @@ function generateToken(user) {
  * UC01: Register Account
  */
 async function registerUser({ full_name, email, phone, password, birthday, birth_date, gender, city, workplace, bio }) {
-  const userBirthday = birthday || birth_date;
+  full_name = text(full_name, 'Full name', 200);
+  email = text(email, 'Email', 320);
+  phone = text(phone, 'Phone', 40);
+  password = text(password, 'Password', 128);
+  gender = text(gender, 'Gender', 20);
+  city = text(city, 'City', 200);
+  workplace = text(workplace, 'Workplace', 200);
+  bio = text(bio, 'Bio', 1000);
+  const userBirthday = text(birthday || birth_date, 'Birthday', 40);
   // 1. Validate full_name
   if (!full_name || typeof full_name !== 'string' || full_name.trim().length === 0) {
     throw new AppError('Full name is required.', 400);
   }
   if (full_name.trim().length > 100) {
     throw new AppError('Full name must be at most 100 characters.', 400);
+  }
+  if (CONTROL_CHARS.test(full_name)) {
+    throw new AppError('Full name contains invalid characters.', 400);
   }
 
   // 2. Validate email and phone (BR-01)
@@ -176,6 +197,10 @@ async function registerUser({ full_name, email, phone, password, birthday, birth
  * UC02: Login User
  */
 async function loginUser({ identifier, email, phone, password }) {
+  identifier = text(identifier, 'Identifier', 320);
+  email = text(email, 'Email', 320);
+  phone = text(phone, 'Phone', 40);
+  password = text(password, 'Password', 128);
   const targetIdentifier = (identifier || email || phone || '').trim();
   if (!targetIdentifier || !password) {
     throw new AppError('Identifier (email or phone) and password are required.', 400);
@@ -221,49 +246,6 @@ async function loginUser({ identifier, email, phone, password }) {
 }
 
 /**
- * UC04: Forgot Password
- */
-async function forgotPassword({ identifier, email, new_password }) {
-  const targetIdentifier = (identifier || email || '').trim();
-  if (!targetIdentifier) {
-    throw new AppError('Email or phone identifier is required.', 400);
-  }
-
-  // Direct reset branch: new_password provided in body
-  if (new_password) {
-    if (!isValidPassword(new_password)) {
-      throw new AppError(
-        'Password must be at least 8 characters with at least one letter and one number.',
-        400
-      );
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const newHash = await bcrypt.hash(new_password, salt);
-
-    const userColl = getCollection('User');
-    const updateRes = await userColl.updateOne(
-      {
-        $or: [
-          { email: targetIdentifier.toLowerCase() },
-          { phone: targetIdentifier },
-        ],
-      },
-      { $set: { password_hash: newHash } }
-    );
-
-    if (updateRes.matchedCount === 0) {
-      throw new AppError('User not found with provided identifier.', 404);
-    }
-
-    return { message: 'Password updated successfully' };
-  }
-
-  // Link dispatch branch: always return MSG-06 to prevent user enumeration
-  return { message: MSG.RESET_LINK_SENT };
-}
-
-/**
  * UC05: Get Current User Profile (GET /api/auth/me)
  */
 async function getCurrentUserProfile(userId) {
@@ -283,6 +265,8 @@ async function getCurrentUserProfile(userId) {
  * Change Password
  */
 async function changePassword(userId, { current_password, new_password } = {}) {
+  current_password = text(current_password, 'Current password', 128);
+  new_password = text(new_password, 'New password', 128);
   if (!current_password || !new_password) {
     throw new AppError('Current password and new password are required.', 400);
   }
@@ -319,7 +303,6 @@ async function changePassword(userId, { current_password, new_password } = {}) {
 module.exports = {
   registerUser,
   loginUser,
-  forgotPassword,
   changePassword,
   getCurrentUserProfile,
   checkLockout,

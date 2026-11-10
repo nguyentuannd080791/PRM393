@@ -187,7 +187,7 @@ Code backend hiện dùng **MongoDB**, dù `package.json` còn dependency Postgr
 - Giữ thống nhất schema đang có: `User`, `Post`, `Friendship`, `Notification` cùng các field snake_case. Các tên collection viết thường trong báo cáo là mô hình dự kiến; không tự tạo bộ collection thứ hai.
 - Thống nhất trước khi sửa authentication, router, theme, model chung hoặc schema. Không chép đè cả thư mục để tích hợp feature.
 - Khi thêm màn hình, cập nhật `lib/app/app_router.dart` và `route_names.dart`. Khi thêm API, kiểm tra mount trong `backend/src/routes/index.js`.
-- Auth hiện còn Splash/Forgot Password và các trường theo code gốc. Đối chiếu báo cáo cuối cùng trước khi thay đổi form dùng chung.
+- Auth gồm Login, Register và Splash (khôi phục phiên); không có Forgot Password vì ngoài phạm vi (không có email/SMS). Đối chiếu báo cáo cuối cùng trước khi thay đổi form dùng chung.
 - Member 1 có thể nối Post Detail vào kết quả tìm bài viết bằng `postDetailPathBuilderProvider` trong `friends/repositories/search_repository.dart` sau khi có route hoạt động. Hiện màn hình Post Detail mới là khung tích hợp.
 
 Member 4 có ba màn hình thật: Search chứa People/Posts, Friend Requests chứa Received/Sent, và Friend List. Không tạo thêm trang kết quả tìm kiếm hoặc tách hai tab lời mời thành hai màn hình.

@@ -34,7 +34,7 @@ function errorMiddleware(err, req, res, next) {
     if (keyPattern.pair || errorMsg.includes('friendship') || errorMsg.includes('idx_friendship_bidirectional_pair')) {
       return res.status(409).json({
         success: false,
-        message: 'A friendship or friend request already exists between these users',
+        message: 'Request already exists.',
       });
     }
     if (errorMsg.includes('Reaction') || errorMsg.includes('idx_reaction_post_user_unique')) {
@@ -51,7 +51,12 @@ function errorMiddleware(err, req, res, next) {
 
   // Custom HTTP status codes
   const status = err.statusCode || err.status || 500;
-  const message = err.message || 'Internal server error';
+  let message = err.message || 'Internal server error';
+  if (status >= 500) {
+    // Never expose internals (library messages, paths) to clients.
+    if (process.env.NODE_ENV !== 'test') console.error(`[ERROR] ${req.method} ${req.originalUrl}:`, err);
+    if (process.env.NODE_ENV !== 'development') message = 'Something went wrong. Please try again.';
+  }
 
   res.status(status).json({
     success: false,

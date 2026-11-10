@@ -33,10 +33,12 @@ class _RegisterPasswordFieldsSectionState
         // Password Field (BR-02: >=8 chars, >=1 letter & >=1 digit)
         TextFormField(
           key: const Key('registerPasswordField'),
+maxLength: 128,
           controller: widget.passwordController,
           obscureText: !_isPasswordVisible,
           style: AppTypography.bodyMd.copyWith(color: colorScheme.onSurface),
           decoration: InputDecoration(
+counterText: '',
             labelText: 'Password',
             labelStyle: AppTypography.bodyMd.copyWith(color: colorScheme.onSurfaceVariant),
             hintText: 'Create password',
@@ -94,10 +96,12 @@ class _RegisterPasswordFieldsSectionState
         // Confirm Password Field
         TextFormField(
           key: const Key('registerConfirmPasswordField'),
+maxLength: 128,
           controller: widget.confirmPasswordController,
           obscureText: !_isConfirmPasswordVisible,
           style: AppTypography.bodyMd.copyWith(color: colorScheme.onSurface),
           decoration: InputDecoration(
+counterText: '',
             labelText: 'Confirm Password',
             labelStyle: AppTypography.bodyMd.copyWith(color: colorScheme.onSurfaceVariant),
             hintText: 'Repeat password',

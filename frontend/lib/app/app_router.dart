@@ -11,7 +11,6 @@ import 'package:clone_facebook/features/auth/auth_provider.dart';
 import 'package:clone_facebook/features/auth/splash_screen.dart';
 import 'package:clone_facebook/features/auth/login_screen.dart';
 import 'package:clone_facebook/features/auth/register_screen.dart';
-import 'package:clone_facebook/features/auth/forgot_password_screen.dart';
 
 import 'package:clone_facebook/features/feed/home_feed_screen.dart';
 import 'package:clone_facebook/features/friends/screens/friend_list_screen.dart';
@@ -65,8 +64,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final isSplash = location == AppRoutePaths.splash;
       final isAuthRoute =
           location == AppRoutePaths.login ||
-          location == AppRoutePaths.register ||
-          location == AppRoutePaths.forgotPassword;
+          location == AppRoutePaths.register;
 
       // 1. Session check in progress -> stay on splash or route to splash
       if (authState.isLoading) {
@@ -75,7 +73,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       final isAuthenticated = authState.isAuthenticated;
 
-      // 2. User is authenticated -> prevent viewing login/register/forgot-password/splash
+      // 2. User is authenticated -> prevent viewing login/register/splash
       if (isAuthenticated) {
         if (isSplash || isAuthRoute || location == '/') {
           return AppRoutePaths.feed;
@@ -109,12 +107,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: AppRouteNames.register,
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const RegisterScreen(),
-      ),
-      GoRoute(
-        path: AppRoutePaths.forgotPassword,
-        name: AppRouteNames.forgotPassword,
-        parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => const ForgotPasswordScreen(),
       ),
 
       // Stateful Bottom Navigation Shell

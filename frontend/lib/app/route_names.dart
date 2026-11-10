@@ -4,7 +4,6 @@ abstract class AppRoutePaths {
   static const splash = '/splash';
   static const login = '/login';
   static const register = '/register';
-  static const forgotPassword = '/forgot-password';
 
   // Bottom Navigation Shell Tabs (Branches)
   static const feed = '/feed';
@@ -43,7 +42,6 @@ abstract class AppRouteNames {
   static const splash = 'splash';
   static const login = 'login';
   static const register = 'register';
-  static const forgotPassword = 'forgotPassword';
 
   static const feed = 'feed';
   static const friends = 'friends';

@@ -3,7 +3,7 @@
 class AppConstants {
   AppConstants._();
 
-  static const String appName = 'Connect';
+  static const String appName = 'Mini Social';
   static const String appTagline =
       'Connect with friends and the world around you.';
 

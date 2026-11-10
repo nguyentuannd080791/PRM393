@@ -3,10 +3,9 @@
 const MSG = {
   NO_INTERNET: 'No internet connection. Please check your network and try again.', // MSG-01
   SOMETHING_WENT_WRONG: 'Something went wrong. Please try again.',                 // MSG-02
-  ACCOUNT_EXISTS: 'An account with this email or phone already exists.',            // MSG-03
+  ACCOUNT_EXISTS: 'An account with this phone number already exists.',            // MSG-03
   INVALID_CREDENTIALS: 'The email or password is incorrect.',                     // MSG-04
   TOO_MANY_ATTEMPTS: 'Too many attempts. Try again in 5 minutes.',                 // MSG-05
-  RESET_LINK_SENT: 'If the email is registered, a reset link has been sent.',      // MSG-06
   OFFLINE_SAVED_CONTENT: 'You are offline. Showing saved content.',                // MSG-07
   POST_SHARED: 'Post shared to your timeline.',                                    // MSG-08
   WRITE_SOMETHING_OR_PHOTO: 'Write something or add a photo to post.',             // MSG-09

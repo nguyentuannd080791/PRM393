@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:clone_facebook/core/theme/app_colors.dart';
 import 'package:clone_facebook/core/theme/app_shapes.dart';
 import 'package:clone_facebook/core/theme/app_typography.dart';
-import 'package:clone_facebook/core/theme/theme_provider.dart';
 
 class ProfilePreferencesCard extends ConsumerWidget {
   final VoidCallback onLogout;
@@ -16,61 +15,10 @@ class ProfilePreferencesCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDark = ref.watch(themeModeProvider) == ThemeMode.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Preferences / Theme Mode Switcher Card (E2E Test Compatibility)
-        Material(
-          color: colorScheme.surface,
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppShapes.radiusCard),
-            side: BorderSide(color: colorScheme.outlineVariant),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-                child: Text(
-                  'Preferences',
-                  style: AppTypography.labelMd.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-              ),
-              SwitchListTile(
-                key: const Key('theme_mode_switch'),
-                value: isDark,
-                onChanged: (val) {
-                  ref.read(themeModeProvider.notifier).toggleTheme();
-                },
-                title: Text(
-                  'Dark Mode',
-                  style: AppTypography.labelMd.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-                subtitle: Text(
-                  isDark ? 'Dark theme enabled' : 'Light theme enabled',
-                  style: AppTypography.captionSm.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                secondary: Icon(
-                  isDark ? Icons.dark_mode : Icons.light_mode,
-                  color: colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-
         // Logout Tile (E2E Test Compatibility)
         Material(
           color: colorScheme.surface,

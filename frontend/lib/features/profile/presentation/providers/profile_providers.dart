@@ -77,12 +77,6 @@ class ProfileController {
     await _ref.read(friendshipActionsProvider.notifier).reject(targetId);
     _invalidate(requestedId, targetId);
   }
-
-  Future<void> unfriend(String requestedId) async {
-    final targetId = _ref.read(effectiveUserIdProvider(requestedId));
-    await _ref.read(friendshipActionsProvider.notifier).unfriend(targetId);
-    _invalidate(requestedId, targetId);
-  }
 }
 
 final profileControllerProvider = Provider<ProfileController>((ref) {

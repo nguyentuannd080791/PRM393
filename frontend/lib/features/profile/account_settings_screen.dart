@@ -90,10 +90,12 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
     child: TextFormField(
       controller: controller,
       obscureText: true,
+      maxLength: 128,
       enableSuggestions: false,
       autocorrect: false,
       decoration: InputDecoration(
         labelText: label,
+        counterText: '',
         border: const OutlineInputBorder(),
       ),
       validator: (value) => (value ?? '').isEmpty
