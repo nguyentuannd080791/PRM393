@@ -19,7 +19,7 @@ import 'presentation/widgets/profile_shortcuts_card.dart';
 /// Minimalist text-first profile screen complying with Mini Social design system.
 /// Features:
 /// - Identity Hero Card with TextAvatar (76dp circular initials over #EAF2FF),
-///   full name, derived @handle, bio (150 chars max), Joined date.
+///   full name, bio (150 chars max), Joined date.
 /// - Stats Row: Posts count, Friends count.
 /// - Action Button: Edit Profile (/profile/edit) for self, friendship action buttons for other users.
 /// - Activity & Shortcuts Card (My Posts, Liked Posts, Saved Posts, Account Settings).

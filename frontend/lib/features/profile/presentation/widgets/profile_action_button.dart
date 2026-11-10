@@ -22,6 +22,45 @@ class ProfileActionButton extends ConsumerStatefulWidget {
 class _ProfileActionButtonState extends ConsumerState<ProfileActionButton> {
   bool _isSubmitting = false;
 
+  Future<void> _confirmUnfriend() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Unfriend'),
+        content: const Text('Remove this person from your friends?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            key: const Key('confirm_unfriend_button'),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Unfriend'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    setState(() => _isSubmitting = true);
+    try {
+      await ref.read(profileControllerProvider).unfriend(widget.userId);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Friend removed.')),
+        );
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.toString())),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = ref.read(profileControllerProvider);
@@ -101,11 +140,43 @@ class _ProfileActionButtonState extends ConsumerState<ProfileActionButton> {
         );
 
       case UserRelationshipStatus.friends:
-        // Status only: the SRS defines no unfriend use case.
-        return const Chip(
-          key: Key('profile_friends_status'),
-          avatar: Icon(Icons.check, size: 18),
-          label: Text('Friends'),
+        return PopupMenuButton<String>(
+          key: const Key('profile_friends_menu_button'),
+          enabled: !_isSubmitting,
+          tooltip: 'Friend options',
+          onSelected: (value) {
+            if (value == 'unfriend') _confirmUnfriend();
+          },
+          itemBuilder: (ctx) => const [
+            PopupMenuItem(
+              value: 'unfriend',
+              child: Row(
+                children: [
+                  Icon(Icons.person_remove, size: 18),
+                  SizedBox(width: 8),
+                  Text('Unfriend'),
+                ],
+              ),
+            ),
+          ],
+          child: Chip(
+            key: const Key('profile_friends_status'),
+            avatar: _isSubmitting
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.check, size: 18),
+            label: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Friends'),
+                SizedBox(width: 2),
+                Icon(Icons.arrow_drop_down, size: 18),
+              ],
+            ),
+          ),
         );
     }
   }

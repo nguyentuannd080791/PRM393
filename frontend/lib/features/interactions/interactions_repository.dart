@@ -37,18 +37,21 @@ class ApiInteractionsRepository implements InteractionsRepository {
   ApiInteractionsRepository(this.client);
   final ApiClient client;
 
-  Future<List<Map<String, dynamic>>> _rows(
-    String path, [
-    int limit = 100,
-  ]) async {
-    final response = await client.get<Map<String, dynamic>>(
-      path,
-      queryParameters: {'limit': limit},
-    );
-    return (response.data!['data'] as List).cast<Map<String, dynamic>>();
+  // Each response is bounded (100 rows); follow the pages so nothing is hidden.
+  Future<List<Map<String, dynamic>>> _rows(String path) async {
+    final rows = <Map<String, dynamic>>[];
+    for (var page = 1; page <= 100; page++) {
+      final response = await client.get<Map<String, dynamic>>(
+        path,
+        queryParameters: {'page': page, 'limit': 100},
+      );
+      final json = response.data!;
+      rows.addAll((json['data'] as List).cast<Map<String, dynamic>>());
+      if (json['pagination']?['has_more'] != true) break;
+    }
+    return rows;
   }
 
-  // ponytail: first 100 rows only; add paging if a post or list grows past that.
   @override
   Future<List<PostComment>> comments(String postId) async =>
       (await _rows('/posts/$postId/comments')).map(PostComment.fromJson).toList();

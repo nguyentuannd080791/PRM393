@@ -15,5 +15,6 @@ router.post('/requests', controller.send);
 router.patch('/requests/:id/accept', controller.change('accept'));
 router.patch('/requests/:id/decline', controller.change('decline'));
 router.patch('/requests/:id/cancel', controller.change('cancel'));
+router.delete('/:userId', controller.unfriend);
 
 module.exports = router;

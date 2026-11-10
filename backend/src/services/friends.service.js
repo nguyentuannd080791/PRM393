@@ -111,6 +111,19 @@ async function changeRequest(viewer, id, action) {
   return { id, status, responded_at: respondedAt };
 }
 
+// Unfriend: either friend may end an accepted friendship. The row is deleted (not flagged) so a
+// fresh request can be sent later; the filter includes status so pending requests are untouched.
+async function removeFriend(viewer, otherId) {
+  validateId(otherId);
+  if (viewer === otherId) throw new AppError('You cannot unfriend yourself.', 400);
+  await requireUser(otherId);
+  const result = await getCollection('Friendship').deleteOne({
+    pair: pairKey(viewer, otherId), status: 'accepted',
+  });
+  if (!result.deletedCount) throw new AppError('You are not friends with this user.', 404);
+  return { user_id: otherId, status: 'none' };
+}
+
 async function listRelationships(viewer, kind, query) {
   const { page, limit, skip } = pagination(query);
   const isFriends = kind === 'friends';
@@ -134,5 +147,5 @@ async function listRelationships(viewer, kind, query) {
 
 module.exports = {
   PUBLIC_USER_FIELDS, pairKey, validateId, pagination, requireUser, relationship,
-  getStatus, sendRequest, changeRequest, listRelationships,
+  getStatus, sendRequest, changeRequest, removeFriend, listRelationships,
 };

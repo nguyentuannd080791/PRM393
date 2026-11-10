@@ -18,6 +18,7 @@ async function startServer() {
     await require('./config/member4_indexes').ensureMember4Indexes();
     await require('./config/member1_indexes').ensureMember1Indexes();
     await require('./config/auth_indexes').ensureAuthIndexes();
+    await require('./config/query_indexes').ensureQueryIndexes();
     console.log(`[DB] Connected to database "${connInfo.database}" on ${connInfo.host}:${connInfo.port} (${connInfo.version})`);
 
     // 2. Start HTTP Server Listener

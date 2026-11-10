@@ -136,7 +136,7 @@ class ProfileShortcutsCard extends StatelessWidget {
                 iconBg: colorScheme.primaryContainer,
                 iconColor: colorScheme.onPrimaryContainer,
                 title: 'Friends',
-                subtitle: 'All friends & suggestions',
+                subtitle: 'Your friends and requests',
                 colorScheme: colorScheme,
                 onTap: () => context.go(AppRoutePaths.friends),
               ),

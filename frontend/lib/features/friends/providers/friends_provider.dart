@@ -57,6 +57,11 @@ class FriendshipActions extends Notifier<Set<String>> {
     () => ref.read(friendsRepositoryProvider).changeRequest(id, action),
   );
 
+  Future<void> unfriend(String userId) => _run(
+    'friend:$userId',
+    () => ref.read(friendsRepositoryProvider).removeFriend(userId),
+  );
+
   Future<void> cancel(String targetUserIdOrRequestId) async {
     final sent = await ref.read(sentRequestsProvider.future);
     final match = sent

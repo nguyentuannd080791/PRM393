@@ -78,6 +78,8 @@ function generateToken(user) {
       id: user.id,
       email: user.email,
       full_name: user.full_name,
+      // Bumped on logout / password change; the auth middleware rejects tokens with an older version.
+      tv: user.token_version || 0,
     },
     jwtSecret(),
     { expiresIn: JWT_EXPIRES_IN }
@@ -175,6 +177,7 @@ async function registerUser({ full_name, email, phone, password, birthday, birth
     city: city ? city.trim() : null,
     workplace: workplace ? workplace.trim() : null,
     saved_post_ids: [],
+    token_version: 0,
     created_at: new Date(),
   };
 
@@ -183,6 +186,7 @@ async function registerUser({ full_name, email, phone, password, birthday, birth
   // Strip password_hash for return
   const safeUser = { ...newUser };
   delete safeUser.password_hash;
+  delete safeUser.token_version;
   delete safeUser._id;
 
   const token = generateToken(safeUser);
@@ -238,6 +242,7 @@ async function loginUser({ identifier, email, phone, password }) {
   delete user._id;
 
   const token = generateToken(user);
+  delete user.token_version;
 
   return {
     user,
@@ -257,6 +262,7 @@ async function getCurrentUserProfile(userId) {
   }
 
   delete user.password_hash;
+  delete user.token_version;
   delete user._id;
   return user;
 }
@@ -292,15 +298,24 @@ async function changePassword(userId, { current_password, new_password } = {}) {
   const salt = await bcrypt.genSalt(10);
   const passwordHash = await bcrypt.hash(new_password, salt);
 
+  // Bump token_version: every other session (old tokens) is signed out. Return a fresh token so
+  // the device that changed the password stays signed in.
   await userColl.updateOne(
     { id: userId },
-    { $set: { password_hash: passwordHash } }
+    { $set: { password_hash: passwordHash }, $inc: { token_version: 1 } }
   );
+  const token = generateToken({ ...user, token_version: (user.token_version || 0) + 1 });
 
-  return { message: 'Password updated successfully' };
+  return { message: 'Password updated successfully', token };
+}
+
+/** Logout: revoke every token issued so far for this user. */
+async function logoutUser(userId) {
+  await getCollection('User').updateOne({ id: userId }, { $inc: { token_version: 1 } });
 }
 
 module.exports = {
+  logoutUser,
   registerUser,
   loginUser,
   changePassword,

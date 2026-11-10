@@ -11,5 +11,7 @@ exports.status = handle(async (req, res) => successResponse(res,
   await service.getStatus(req.user.id, req.params.userId)));
 exports.send = handle(async (req, res) => successResponse(res,
   await service.sendRequest(req.user.id, req.body.receiver_id), 201, 'Friend request sent.'));
+exports.unfriend = handle(async (req, res) => successResponse(res,
+  await service.removeFriend(req.user.id, req.params.userId), 200, 'Friend removed.'));
 exports.change = action => handle(async (req, res) => successResponse(res,
   await service.changeRequest(req.user.id, req.params.id, action)));

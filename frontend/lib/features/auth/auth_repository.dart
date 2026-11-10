@@ -99,10 +99,14 @@ class AuthRepository {
     required String currentPassword,
     required String newPassword,
   }) async {
-    await _apiClient.post('/auth/change-password', data: {
+    final response = await _apiClient.post('/auth/change-password', data: {
       'current_password': currentPassword,
       'new_password': newPassword,
     });
+    // The server revokes every older token, so keep this device signed in with the fresh one.
+    final data = response.data['data'];
+    final token = data is Map ? data['token'] as String? : null;
+    if (token != null) await _tokenStorage.saveToken(token);
   }
 }
 

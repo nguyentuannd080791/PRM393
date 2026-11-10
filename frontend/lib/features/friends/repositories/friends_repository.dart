@@ -7,6 +7,7 @@ abstract interface class FriendsRepository {
   Future<List<FriendRequest>> connections(String kind);
   Future<void> sendRequest(String receiverId);
   Future<void> changeRequest(String requestId, String action);
+  Future<void> removeFriend(String userId);
 }
 
 class ApiFriendsRepository implements FriendsRepository {
@@ -41,6 +42,11 @@ class ApiFriendsRepository implements FriendsRepository {
   @override
   Future<void> changeRequest(String requestId, String action) async {
     await client.patch('/friends/requests/$requestId/$action');
+  }
+
+  @override
+  Future<void> removeFriend(String userId) async {
+    await client.delete('/friends/$userId');
   }
 }
 

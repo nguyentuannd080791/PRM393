@@ -13,7 +13,7 @@ import 'presentation/providers/profile_providers.dart';
 /// Pushed sub-route with back button.
 /// Features:
 /// - Avatar initials preview (TextAvatar dynamic preview)
-/// - Preview Name, handle & join year
+/// - Preview Name & join year
 /// - Full Name field with character counter and clear button
 /// - Bio field with 150-char counter ("{count}/150 characters")
 /// - Primary Save Button & Secondary Discard Button
@@ -162,7 +162,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final user = ref.watch(currentUserProvider);
     final currentName = _nameController.text.trim();
     final displayName = currentName.isNotEmpty ? currentName : (user?.fullName ?? 'User');
-    final derivedHandle = '@${displayName.toLowerCase().replaceAll(RegExp(r'\s+'), '_')}';
     final memberYear = user?.createdAt?.year ?? DateTime.now().year;
 
     return PopScope(
@@ -235,7 +234,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                 size: 64.0,
                                 backgroundColor: colorScheme.primaryContainer,
                                 textColor: colorScheme.onPrimaryContainer,
-                                showOnlineIndicator: true,
                               ),
                               const SizedBox(height: 8),
 
@@ -250,7 +248,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                '$derivedHandle • Member since $memberYear',
+                                'Member since $memberYear',
                                 style: AppTypography.captionSm.copyWith(
                                   color: colorScheme.onSurfaceVariant,
                                 ),

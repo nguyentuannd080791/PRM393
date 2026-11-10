@@ -88,18 +88,6 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
           _editing ? 'Edit Post' : 'Create Post',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            tooltip: 'Profile',
-            icon: const CircleAvatar(
-              radius: 15,
-              backgroundColor: Color(0xFF1769E0),
-              child: Icon(Icons.person, color: Colors.white, size: 19),
-            ),
-          ),
-          const SizedBox(width: 8),
-        ],
       ),
       body: SafeArea(
         child: ListView(

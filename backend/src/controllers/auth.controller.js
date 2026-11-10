@@ -22,7 +22,7 @@ async function login(req, res, next) {
 
 async function logout(req, res, next) {
   try {
-    // Session invalidated on client by clearing token
+    await authService.logoutUser(req.user.userId);
     return successResponse(res, null, 200, 'Logged out successfully');
   } catch (err) {
     next(err);
@@ -33,7 +33,7 @@ async function changePassword(req, res, next) {
   try {
     const { current_password, new_password } = req.body;
     const result = await authService.changePassword(req.user.userId, { current_password, new_password });
-    return successResponse(res, null, 200, result.message || 'Password updated successfully');
+    return successResponse(res, { token: result.token }, 200, result.message || 'Password updated successfully');
   } catch (err) {
     next(err);
   }

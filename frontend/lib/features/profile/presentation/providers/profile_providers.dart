@@ -3,6 +3,7 @@ import '../../../../core/models/app_models.dart';
 import '../../../auth/auth_provider.dart';
 import '../../domain/entities/user_profile.dart';
 import '../../profile_repository.dart';
+import '../../../feed/feed_provider.dart';
 import '../../../friends/providers/friends_provider.dart';
 
 /// Resolves the effective target userId (mapping 'me' or empty to the viewer).
@@ -70,6 +71,16 @@ class ProfileController {
     final targetId = _ref.read(effectiveUserIdProvider(requestedId));
     await _ref.read(friendshipActionsProvider.notifier).accept(targetId);
     _invalidate(requestedId, targetId);
+  }
+
+  /// Ends an accepted friendship. Friends-only posts disappear from the feed and the profile.
+  Future<void> unfriend(String requestedId) async {
+    final targetId = _ref.read(effectiveUserIdProvider(requestedId));
+    await _ref.read(friendshipActionsProvider.notifier).unfriend(targetId);
+    _invalidate(requestedId, targetId);
+    _ref.invalidate(profilePostsProvider(requestedId));
+    _ref.invalidate(profilePostsProvider(targetId));
+    _ref.invalidate(feedProvider);
   }
 
   Future<void> rejectFriendRequest(String requestedId) async {

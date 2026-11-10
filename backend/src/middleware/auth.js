@@ -1,6 +1,7 @@
 // backend/src/middlewares/auth.middleware.js
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config/jwt');
+const { getCollection } = require('../config/database');
 
 function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization || req.headers.Authorization;
@@ -23,7 +24,7 @@ function authMiddleware(req, res, next) {
   const token = parts[1];
   const secret = jwtSecret();
 
-  jwt.verify(token, secret, (err, decoded) => {
+  jwt.verify(token, secret, async (err, decoded) => {
     if (err) {
       if (err.name === 'TokenExpiredError') {
         return res.status(401).json({
@@ -38,6 +39,18 @@ function authMiddleware(req, res, next) {
     }
 
     const userId = decoded.userId || decoded.id;
+    try {
+      // Revocation: logout / password change bump token_version, which kills older tokens.
+      const record = await getCollection('User').findOne({ id: userId }, { projection: { token_version: 1 } });
+      if (record && (record.token_version || 0) !== (decoded.tv || 0)) {
+        return res.status(401).json({
+          success: false,
+          message: 'Session expired. Please log in again.',
+        });
+      }
+    } catch (dbError) {
+      return next(dbError);
+    }
     req.user = {
       userId,
       id: userId,

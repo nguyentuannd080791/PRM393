@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:clone_facebook/core/enums/app_enums.dart';
 import 'package:clone_facebook/core/models/app_models.dart';
 import 'package:clone_facebook/app/route_names.dart';
-import 'package:clone_facebook/core/theme/app_colors.dart';
 import 'package:clone_facebook/core/theme/app_shapes.dart';
 import 'package:clone_facebook/core/theme/app_typography.dart';
 import 'package:clone_facebook/core/widgets/text_avatar.dart';
@@ -114,7 +113,6 @@ class ProfileHeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isSelf = profileView.relationshipStatus == UserRelationshipStatus.self;
-    final derivedHandle = '@${user.fullName.toLowerCase().replaceAll(RegExp(r'\s+'), '_')}';
     final joinDateStr = _formatJoinDate(user.createdAt);
 
     return Material(
@@ -135,8 +133,6 @@ class ProfileHeroCard extends StatelessWidget {
               size: 76.0,
               backgroundColor: colorScheme.primaryContainer,
               textColor: colorScheme.onPrimaryContainer,
-              showOnlineIndicator: true,
-              onlineIndicatorColor: AppColors.success,
             ),
             const SizedBox(height: 12),
 
@@ -151,10 +147,10 @@ class ProfileHeroCard extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
 
-            // Derived Handle & Join Date
+            // Join date (from the account's created_at)
             const SizedBox(height: 2),
             Text(
-              '$derivedHandle • $joinDateStr',
+              joinDateStr,
               style: AppTypography.captionMd.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),

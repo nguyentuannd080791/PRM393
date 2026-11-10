@@ -115,6 +115,11 @@ class FakeRepository implements SearchRepository, FriendsRepository {
   }
 
   @override
+  Future<void> removeFriend(String userId) async {
+    friends.removeWhere((c) => c.user.id == userId);
+  }
+
+  @override
   Future<void> changeRequest(String id, String action) async {
     final found = [
       ...received,
