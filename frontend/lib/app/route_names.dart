@@ -17,17 +17,12 @@ abstract class AppRoutePaths {
 
   // Sub-routes & Full-screen Modals
   static const createPost = '/post/create';
-  static const postInsights = '/post/:id/insights';
-  static String postInsightsPath(String id) => '/post/$id/insights';
   static const editPost = '/post/:id/edit';
   static String editPostPath(String id) => '/post/$id/edit';
 
   static const profileEdit = '/profile/edit';
   static const profile = '/profile/:userId';
   static String profilePath(String userId) => '/profile/$userId';
-
-  static const myPosts = '/posts/:userId';
-  static String myPostsPath(String userId) => '/posts/$userId';
 
   static const friendsSearch = '/friends/search';
   static const allFriends = '/friends/all';
@@ -49,11 +44,9 @@ abstract class AppRouteNames {
   static const menu = 'menu';
 
   static const createPost = 'createPost';
-  static const postInsights = 'postInsights';
   static const editPost = 'editPost';
   static const profileEdit = 'profileEdit';
   static const profile = 'profile';
-  static const myPosts = 'myPosts';
 
   static const friendsSearch = 'friendsSearch';
   static const allFriends = 'allFriends';

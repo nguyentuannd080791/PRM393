@@ -2,7 +2,7 @@
 
 Branch: `feat/member4-search-friends`.
 
-This implementation covers SCR10 Search, SCR11 Friend Requests (Received / Sent tabs), SCR12 Friend List, and the API-backed My Posts screen. It reuses the team's authentication, JWT middleware, API client, and existing Profile screen. Other members' feed, profile, and notification screens remain outside its scope.
+This implementation covers exactly SCR10 Search, SCR11 Friend Requests (Received / Sent tabs), and SCR12 Friend List. It reuses the team's authentication, JWT middleware, API client, and existing Profile screen. It does not implement other members' feed, post editor, profile, or notification screens.
 
 ## Run locally (PowerShell)
 
@@ -61,11 +61,6 @@ All endpoints require the existing `Authorization: Bearer <token>` header. Curre
 | --- | --- | --- |
 | GET | `/api/search/users?q=Minh&page=1&limit=20` | Partial, case-insensitive people search and relationship state |
 | GET | `/api/search/posts?q=Flutter&page=1&limit=20` | Text posts, excluding deleted/media/inaccessible posts |
-| GET | `/api/posts/users/:userId?page=1&limit=100` | Active posts visible to the authenticated user, with live reaction/comment counts |
-| POST | `/api/posts` | Create a public post for the authenticated user; body: `{"content":"..."}` |
-| PUT | `/api/posts/:id` | Edit the owner's post; body may include `content` |
-| DELETE | `/api/posts/:id` | Soft-delete the owner's post |
-| GET | `/api/posts/:id/insights` | Owner-only reaction, comment, and engagement counts |
 | GET | `/api/friends?page=1&limit=100` | Accepted friends in both directions |
 | GET | `/api/friends/status/:userId` | Relationship relative to current viewer |
 | GET | `/api/friends/requests/received` | Incoming pending requests |
@@ -98,11 +93,10 @@ Routes:
 - `/search`: SCR10.
 - `/friends`: SCR12.
 - `/friends/requests`: SCR11; `?tab=sent` initially opens Sent.
-- On `/search`, selecting Posts with an empty query opens the signed-in user's My Posts; enter a query first to search post text.
 - Legacy `/friends/search` and `/friends/all` redirect to the canonical screens.
 - Existing profile, menu, notifications, authentication and post-editor paths remain available. A settings icon on the existing own-profile screen opens the existing account menu.
 
-The four bottom destinations are Home / Search / Friends / Profile. Selecting a search post opens that author's visible active posts. Owners can create, edit, soft-delete, and inspect counts for their own posts; mutations and insights are checked against the authenticated user on the backend.
+The four bottom destinations are Home / Search / Friends / Profile. Other members' screens are reused as-is. Their existing placeholder implementations remain team integration work.
 
 No Post Detail route exists in this checkout. Member 1 can connect their route by overriding `postDetailPathBuilderProvider` with a builder returning their route path. Search results already show full post text and let users open author profiles. No additional Post Detail screen is created here.
 

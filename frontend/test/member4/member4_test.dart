@@ -18,7 +18,6 @@ import 'package:clone_facebook/features/auth/auth_provider.dart';
 import 'package:clone_facebook/features/friends/repositories/search_repository.dart';
 import 'package:clone_facebook/features/friends/models/user_result.dart';
 import 'package:clone_facebook/features/friends/providers/search_provider.dart';
-import 'package:clone_facebook/features/posts/posts_repository.dart';
 
 final now = DateTime(2026, 11, 10, 10);
 FriendRequest connection(String id, String name) => FriendRequest(
@@ -127,42 +126,12 @@ class FakeRepository implements SearchRepository, FriendsRepository {
   }
 }
 
-class FakePostsRepository implements PostsRepository {
-  @override
-  Future<List<ManagedPost>> getUserPosts(String userId) async => [
-    ManagedPost(
-      id: 'alice-post',
-      authorId: userId,
-      authorName: 'Alice',
-      content: 'My post from MongoDB API',
-      createdAt: now,
-      updatedAt: now,
-      audience: 'public',
-      likes: 3,
-      comments: 1,
-    ),
-  ];
-
-  @override
-  Future<void> createPost(String content, {String audience = 'public'}) async {}
-
-  @override
-  Future<void> updatePost(String postId, String content) async {}
-
-  @override
-  Future<void> deletePost(String postId) async {}
-
-  @override
-  Future<Map<String, dynamic>> getInsights(String postId) async => {};
-}
-
 ProviderContainer makeContainer(FakeRepository repository) => ProviderContainer(
   overrides: [
     authStateProvider.overrideWith(SignedInAuth.new),
     sessionUserIdProvider.overrideWithValue('alice'),
     searchRepositoryProvider.overrideWithValue(repository),
     friendsRepositoryProvider.overrideWithValue(repository),
-    postsRepositoryProvider.overrideWithValue(FakePostsRepository()),
   ],
 );
 
@@ -302,21 +271,6 @@ void main() {
       expect(find.text('Learning Flutter with friends.'), findsNothing);
     },
   );
-
-  testWidgets('Posts tab opens the signed-in user posts when search is blank', (
-    tester,
-  ) async {
-    final repo = FakeRepository();
-    final container = makeContainer(repo);
-    addTearDown(container.dispose);
-    await mount(tester, container, AppRoutePaths.search);
-
-    await tester.tap(find.text('Posts'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('My Posts'), findsOneWidget);
-    expect(find.text('My post from MongoDB API'), findsOneWidget);
-  });
 
   testWidgets('double submission is blocked until request completes', (
     tester,
