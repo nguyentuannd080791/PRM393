@@ -161,4 +161,6 @@ async function markAllRead(viewer) {
 
 module.exports = {
   feed, getPost, listLikes, setLike, setSaved, listNotifications, markRead, markAllRead,
+  // Shared with Member 3 (interactions) and Member 5 (profile).
+  enrich, visiblePost, visibleFilter, friendIdsOf,
 };

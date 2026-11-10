@@ -28,13 +28,8 @@ flutter pub get
 flutter run -d chrome
 ```
 
-Use existing registration/login to obtain a real session. Use at least two registered accounts to exercise both sides of a friendship. Screens always load real API data; the optional script below inserts separate demo fixtures only when explicitly run.
+Use existing registration/login to obtain a real session. Use at least two registered accounts to exercise both sides of a friendship. Screens always load real API data.
 
-### Optional demo data
-
-Run `npm.cmd run seed:member4` from `backend` to insert nine demo users, eight posts (six public, one private, one deleted), and six relationships with corresponding notifications. It never clears collections or resets existing request statuses, accounts, or passwords. All demo records are persisted in MongoDB; production search still uses the real API.
-
-Login A: `member4.a@example.com` / `0904400001`. Login B: `member4.b@example.com` / `0904400002`. The shared demo password is `Demo1234!`. Account A initially has Minh Le and Tien Nguyen as friends, pending received requests from Ha Pham and Nhi Tran, and pending sent requests to Hoang Le and Quang Le. B starts without a relationship to A for testing Add Friend. Search `Minh` in People or `Flutter` in Posts. Use normal login; the existing Demo Login button is a different account.
 
 ## Android and Wi-Fi/LAN
 

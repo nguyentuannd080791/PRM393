@@ -15,9 +15,6 @@ class SessionStorage {
   static const String _tokenKey = 'auth_token';
   static const String _userKey = 'current_user';
 
-  /// Optional hook for automated test harnesses.
-  static UserModel? Function()? testUserFallback;
-
   SessionStorage([this._prefs]);
 
   Future<void> saveToken(String token) async {
@@ -66,12 +63,11 @@ class SessionStorage {
         return null;
       }
     }
-    return testUserFallback?.call();
+    return null;
   }
 
   Future<void> clearUser() async {
     _userCleared = true;
-    testUserFallback = null;
     if (_prefs != null) {
       await _prefs.remove(_userKey);
     } else {
@@ -81,7 +77,6 @@ class SessionStorage {
 
   Future<void> clearAll() async {
     _userCleared = true;
-    testUserFallback = null;
     await clearToken();
     await clearUser();
   }

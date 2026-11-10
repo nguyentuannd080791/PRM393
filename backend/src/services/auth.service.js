@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { getCollection } = require('../config/database');
 const { AppError } = require('../middleware/error');
 const { MSG } = require('../utils/messages');
+const { jwtSecret } = require('../config/jwt');
 const {
   isValidEmail,
   isValidPhone,
@@ -14,7 +15,6 @@ const {
   normalizeGender,
 } = require('../utils/validation');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_fb_clone_course_project_jwt_key_2026_prm393';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
 
 // =============================================================================
@@ -69,7 +69,7 @@ function generateToken(user) {
       email: user.email,
       full_name: user.full_name,
     },
-    JWT_SECRET,
+    jwtSecret(),
     { expiresIn: JWT_EXPIRES_IN }
   );
 }
@@ -91,8 +91,8 @@ async function registerUser({ full_name, email, phone, password, birthday, birth
   const trimmedEmail = email ? email.trim().toLowerCase() : null;
   const trimmedPhone = phone ? phone.trim().replace(/[\s-]/g, '') : null;
 
-  if (!trimmedEmail && !trimmedPhone) {
-    throw new AppError('Either email or phone is required.', 400);
+  if (!trimmedPhone) {
+    throw new AppError('Please enter the required information.', 400);
   }
   if (trimmedEmail && !isValidEmail(trimmedEmail)) {
     throw new AppError('Invalid email format.', 400);
@@ -116,8 +116,8 @@ async function registerUser({ full_name, email, phone, password, birthday, birth
     }
   }
 
-  // 4. Validate age (BR-03)
-  if (!userBirthday || !isAtLeast13YearsOld(userBirthday)) {
+  // 4. Birthday is optional; when given, enforce the age rule (BR-03)
+  if (userBirthday && !isAtLeast13YearsOld(userBirthday)) {
     throw new AppError('You must be at least 13 years old to register.', 400);
   }
 
@@ -146,7 +146,7 @@ async function registerUser({ full_name, email, phone, password, birthday, birth
     email: trimmedEmail,
     phone: trimmedPhone,
     password_hash: passwordHash,
-    birthday: new Date(userBirthday),
+    birthday: userBirthday ? new Date(userBirthday) : null,
     gender: normalizedGender,
     avatar_url: null,
     cover_url: null,

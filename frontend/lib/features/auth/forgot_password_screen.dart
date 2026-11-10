@@ -106,15 +106,6 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Preserves router regression test compatibility with zero layout footprint
-                    const SizedBox(
-                      width: 0,
-                      height: 0,
-                      child: Text(
-                        'Forgot Password Placeholder',
-                        style: TextStyle(fontSize: 0.01, color: Colors.transparent),
-                      ),
-                    ),
 
                     // Top Icon & Title Block
                     Center(

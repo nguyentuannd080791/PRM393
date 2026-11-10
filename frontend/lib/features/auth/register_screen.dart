@@ -9,7 +9,6 @@ import 'package:clone_facebook/core/widgets/brand_mark.dart';
 import 'package:clone_facebook/features/auth/auth_provider.dart';
 import 'package:clone_facebook/features/auth/presentation/widgets/register_account_fields_section.dart';
 import 'package:clone_facebook/features/auth/presentation/widgets/register_password_fields_section.dart';
-import 'package:clone_facebook/features/auth/presentation/widgets/register_personal_info_section.dart';
 import 'package:clone_facebook/features/auth/presentation/widgets/register_terms_and_submit.dart';
 
 /// Screen 17: Register Screen (scr17_register)
@@ -26,14 +25,9 @@ class RegisterScreen extends ConsumerStatefulWidget {
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
-  final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-
-  DateTime? _selectedBirthday;
-  String _selectedGender = 'Female';
-  String? _birthdayError;
 
   @override
   void initState() {
@@ -48,66 +42,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   void dispose() {
     _fullNameController.dispose();
-    _emailController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _pickBirthday() async {
-    final now = DateTime.now();
-    final initialDate = _selectedBirthday ?? DateTime(now.year - 18, now.month, now.day);
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(1900),
-      lastDate: now,
-    );
-
-    if (picked != null) {
-      setState(() {
-        _selectedBirthday = picked;
-        _birthdayError = _validateBirthday(picked);
-      });
-    }
-  }
-
-  String? _validateBirthday(DateTime? date) {
-    if (date == null) {
-      return 'Please select your birthday';
-    }
-    final now = DateTime.now();
-    int age = now.year - date.year;
-    if (now.month < date.month || (now.month == date.month && now.day < date.day)) {
-      age--;
-    }
-    if (age < 13) {
-      return 'You must be at least 13 years old to register';
-    }
-    return null;
-  }
-
   Future<void> _handleRegister() async {
-    final birthdayErr = _validateBirthday(_selectedBirthday);
-    setState(() {
-      _birthdayError = birthdayErr;
-    });
-
-    if (!_formKey.currentState!.validate() || birthdayErr != null) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
     final authNotifier = ref.read(authStateProvider.notifier);
     final success = await authNotifier.register(
       fullName: _fullNameController.text.trim(),
-      email: _emailController.text.trim(),
-      phone: _phoneController.text.trim().isNotEmpty
-          ? _phoneController.text.trim()
-          : null,
+      phone: _phoneController.text.trim(),
       password: _passwordController.text,
-      birthday: _selectedBirthday!,
-      gender: _selectedGender,
     );
 
     if (success && mounted) {
@@ -147,15 +95,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Preserves router regression test compatibility with zero layout footprint
-                    const SizedBox(
-                      width: 0,
-                      height: 0,
-                      child: Text(
-                        'Register Screen Placeholder',
-                        style: TextStyle(fontSize: 0.01, color: Colors.transparent),
-                      ),
-                    ),
 
                     // Top Brand Section (scr17_register)
                     Center(
@@ -235,7 +174,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         children: [
                           RegisterAccountFieldsSection(
                             fullNameController: _fullNameController,
-                            emailController: _emailController,
                             phoneController: _phoneController,
                           ),
                           const SizedBox(height: 14),
@@ -246,18 +184,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           ),
                           const SizedBox(height: 14),
 
-                          RegisterPersonalInfoSection(
-                            selectedBirthday: _selectedBirthday,
-                            birthdayError: _birthdayError,
-                            onPickBirthday: _pickBirthday,
-                            selectedGender: _selectedGender,
-                            onGenderChanged: (gender) {
-                              setState(() {
-                                _selectedGender = gender;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 6),
 
                           RegisterTermsAndSubmit(
                             isLoading: authState.isLoading,

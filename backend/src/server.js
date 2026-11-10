@@ -11,11 +11,13 @@ let server = null;
 
 async function startServer() {
   try {
+    require('./config/jwt').jwtSecret(); // fail fast on a missing/weak secret
     // 1. Verify MongoDB Database Connection
     console.log('[DB] Connecting to MongoDB...');
     const connInfo = await db.testConnection();
     await require('./config/member4_indexes').ensureMember4Indexes();
     await require('./config/member1_indexes').ensureMember1Indexes();
+    await require('./config/auth_indexes').ensureAuthIndexes();
     console.log(`[DB] Connected to database "${connInfo.database}" on ${connInfo.host}:${connInfo.port} (${connInfo.version})`);
 
     // 2. Start HTTP Server Listener

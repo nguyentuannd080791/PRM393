@@ -110,7 +110,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           ),
                       const SizedBox(height: 8),
                       Text(
-                        '${results.total} ${state.kind == SearchKind.people ? 'people' : 'posts'} found for “${state.query.trim()}”',
+                        '${results.total} ${state.kind == SearchKind.people ? (results.total == 1 ? 'person' : 'people') : (results.total == 1 ? 'post' : 'posts')} found for “${state.query.trim()}”',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: socialMuted,

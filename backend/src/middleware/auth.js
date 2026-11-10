@@ -1,5 +1,6 @@
 // backend/src/middlewares/auth.middleware.js
 const jwt = require('jsonwebtoken');
+const { jwtSecret } = require('../config/jwt');
 
 function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization || req.headers.Authorization;
@@ -20,7 +21,7 @@ function authMiddleware(req, res, next) {
   }
 
   const token = parts[1];
-  const secret = process.env.JWT_SECRET || 'super_secret_fb_clone_course_project_jwt_key_2026_prm393';
+  const secret = jwtSecret();
 
   jwt.verify(token, secret, (err, decoded) => {
     if (err) {

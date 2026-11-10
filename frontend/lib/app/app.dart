@@ -18,6 +18,16 @@ class FbCloneApp extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       themeMode: ThemeMode.light,
       routerConfig: router,
+      // Mobile-first app: on a wide browser window keep it a centred phone-width column.
+      builder: (context, child) => ColoredBox(
+        color: const Color(0xFFE9EDF5),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: ClipRect(child: child ?? const SizedBox.shrink()),
+          ),
+        ),
+      ),
     );
   }
 }

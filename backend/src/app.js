@@ -9,10 +9,10 @@ const app = express();
 // 1. CORS Configuration
 app.use(
   cors({
-    origin: '*',
+    // Native apps ignore CORS; set CORS_ORIGIN=https://site1,https://site2 to restrict browsers.
+    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',').map(o => o.trim()) : '*',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
-    credentials: true,
   })
 );
 

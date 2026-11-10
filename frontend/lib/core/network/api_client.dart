@@ -1,7 +1,5 @@
 import '../config/api_config.dart';
 
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:clone_facebook/features/auth/auth_provider.dart';
@@ -108,8 +106,6 @@ class ApiClient {
   final SessionStorage tokenStorage;
   final void Function()? onSessionExpired;
 
-  /// Global adapter override for automated test harnesses.
-  static HttpClientAdapter? testAdapter;
   static void Function()? onGlobalSessionExpired;
 
   static String get defaultBaseUrl => ApiConfig.baseUrl;
@@ -140,70 +136,6 @@ class ApiClient {
             (onSessionExpired ?? onGlobalSessionExpired)?.call(),
       ),
     );
-    if (testAdapter != null) {
-      dio.httpClientAdapter = testAdapter!;
-    }
-  }
-
-  Future<Response<T>> _directFetch<T>(
-    String method,
-    String path, {
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-  }) async {
-    final headers = <String, dynamic>{
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      ...?options?.headers,
-    };
-    final token = tokenStorage.getToken();
-    if (token != null && token.isNotEmpty) {
-      headers['Authorization'] = 'Bearer $token';
-    }
-
-    final reqOptions = RequestOptions(
-      path: path,
-      method: method,
-      baseUrl: dio.options.baseUrl,
-      data: data,
-      queryParameters: queryParameters,
-      headers: headers,
-    );
-
-    final resBody = await testAdapter!.fetch(reqOptions, null, null);
-    dynamic bodyData;
-    try {
-      final str = await utf8.decodeStream(resBody.stream);
-      if (str.isNotEmpty) {
-        bodyData = jsonDecode(str);
-      }
-    } catch (_) {}
-
-    final response = Response<T>(
-      data: bodyData as T,
-      statusCode: resBody.statusCode,
-      headers: Headers.fromMap(resBody.headers),
-      requestOptions: reqOptions,
-    );
-
-    if (resBody.statusCode >= 200 && resBody.statusCode < 300) {
-      return response;
-    }
-
-    if (resBody.statusCode == 401 &&
-        !path.contains('/auth/login') &&
-        !path.contains('/auth/forgot-password')) {
-      await tokenStorage.clearAll();
-      (onSessionExpired ?? onGlobalSessionExpired)?.call();
-    }
-
-    final dioException = DioException(
-      requestOptions: reqOptions,
-      response: response,
-      type: DioExceptionType.badResponse,
-    );
-    throw mapDioException(dioException);
   }
 
   Future<Response<T>> get<T>(
@@ -211,14 +143,6 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    if (testAdapter != null) {
-      return _directFetch<T>(
-        'GET',
-        path,
-        queryParameters: queryParameters,
-        options: options,
-      );
-    }
     try {
       return await dio.get<T>(
         path,
@@ -236,15 +160,6 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    if (testAdapter != null) {
-      return _directFetch<T>(
-        'POST',
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-    }
     try {
       return await dio.post<T>(
         path,
@@ -263,15 +178,6 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    if (testAdapter != null) {
-      return _directFetch<T>(
-        'PUT',
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-    }
     try {
       return await dio.put<T>(
         path,
@@ -290,15 +196,6 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    if (testAdapter != null) {
-      return _directFetch<T>(
-        'DELETE',
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-    }
     try {
       return await dio.delete<T>(
         path,
@@ -317,15 +214,6 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    if (testAdapter != null) {
-      return _directFetch<T>(
-        'PATCH',
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-    }
     try {
       return await dio.patch<T>(
         path,

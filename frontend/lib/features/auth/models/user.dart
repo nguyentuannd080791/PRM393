@@ -49,7 +49,7 @@ class User {
       fullName: fullName,
       email: email,
       phone: phone,
-      passwordHash: passwordHash ?? 'demo_hash',
+      passwordHash: passwordHash ?? '',
       birthday: birthday ?? DateTime(2000, 1, 1),
       gender: gender ?? 'Custom',
       avatarUrl: avatarUrl,

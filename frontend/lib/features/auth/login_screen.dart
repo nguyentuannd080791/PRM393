@@ -42,11 +42,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
-  void _autofillDemo() {
-    _identifierController.text = 'minh.nguyen@example.com';
-    _passwordController.text = 'Password123!';
-  }
-
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -65,19 +60,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         }
       } else {
         _passwordController.clear();
-      }
-    }
-  }
-
-  Future<void> _handleDemoLogin() async {
-    _autofillDemo();
-    final authNotifier = ref.read(authStateProvider.notifier);
-    final success = await authNotifier.demoLogin();
-    if (success && mounted) {
-      try {
-        context.go(AppRoutePaths.feed);
-      } catch (_) {
-        // Fallback if mounted outside GoRouter in widget tests
       }
     }
   }
@@ -102,24 +84,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Preserves router regression test compatibility with zero layout footprint
-                    const SizedBox(
-                      width: 0,
-                      height: 0,
-                      child: Text(
-                        'Login Screen Placeholder',
-                        style: TextStyle(fontSize: 0.01, color: Colors.transparent),
-                      ),
-                    ),
-                    // Preserves legacy brand string assertions in tests without polluting visual design
-                    const SizedBox(
-                      width: 0,
-                      height: 0,
-                      child: Text(
-                        'Connect',
-                        style: TextStyle(fontSize: 0.01, color: Colors.transparent),
-                      ),
-                    ),
 
                     // Top Brand Identity Block (scr16_login)
                     Center(
@@ -227,12 +191,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             key: const Key('loginEmailField'),
                             controller: _identifierController,
                             enabled: !authState.isLoading && !authState.isLockedOut,
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.phone,
                             style: AppTypography.bodyMd.copyWith(color: colorScheme.onSurface),
                             decoration: InputDecoration(
-                              labelText: 'Email or Phone',
+                              labelText: 'Phone Number',
                               labelStyle: AppTypography.bodyMd.copyWith(color: colorScheme.onSurfaceVariant),
-                              hintText: '+84 912 345 678 or email',
+                              hintText: '0912345678',
                               hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.slate400),
                               prefixIcon: Icon(Icons.person_outline, color: colorScheme.onSurfaceVariant, size: 20),
                               filled: true,
@@ -252,16 +216,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ),
                             ),
                             validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Please enter your email or phone number';
+                              final phone = (value ?? '').trim();
+                              if (phone.isEmpty) {
+                                return 'Please enter the required information.';
                               }
-                              final trimmed = value.trim();
-                              final isEmail = RegExp(
-                                r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
-                              ).hasMatch(trimmed);
-                              final isPhone = RegExp(r'^[0-9]{9,11}$').hasMatch(trimmed);
-                              if (!isEmail && !isPhone) {
-                                return 'Enter a valid email address or phone number';
+                              if (!RegExp(r'^\+?[0-9]{9,15}$').hasMatch(phone)) {
+                                return 'Enter a valid phone number (9-15 digits).';
                               }
                               return null;
                             },
@@ -377,33 +337,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-
-                          // Demo Login / Autofill Button for Course Evaluation
-                          SizedBox(
-                            height: 42,
-                            child: OutlinedButton.icon(
-                              key: const Key('demoLoginButton'),
-                              icon: const Icon(Icons.bolt, size: 18, color: AppColors.primaryAction),
-                              label: Text(
-                                'Demo Login / Autofill (Minh Nguyen)',
-                                style: AppTypography.labelSm.copyWith(
-                                  color: AppColors.primaryAction,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: AppColors.primaryFixed),
-                                backgroundColor: AppColors.softBlueSurface,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(AppShapes.radiusButton),
-                                ),
-                              ),
-                              onPressed: (authState.isLoading || authState.isLockedOut)
-                                  ? null
-                                  : _handleDemoLogin,
                             ),
                           ),
                         ],

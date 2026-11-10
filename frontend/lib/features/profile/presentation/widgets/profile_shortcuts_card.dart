@@ -103,7 +103,7 @@ class ProfileShortcutsCard extends StatelessWidget {
               _buildShortcutTile(
                 icon: Icons.feed_outlined,
                 iconBg: colorScheme.primaryContainer,
-                iconColor: colorScheme.primary,
+                iconColor: colorScheme.onPrimaryContainer,
                 title: 'My Posts',
                 subtitle: 'Manage published posts',
                 colorScheme: colorScheme,
@@ -134,7 +134,7 @@ class ProfileShortcutsCard extends StatelessWidget {
               _buildShortcutTile(
                 icon: Icons.people_outline,
                 iconBg: colorScheme.primaryContainer,
-                iconColor: colorScheme.primary,
+                iconColor: colorScheme.onPrimaryContainer,
                 title: 'Friends',
                 subtitle: 'All friends & suggestions',
                 colorScheme: colorScheme,
@@ -149,7 +149,7 @@ class ProfileShortcutsCard extends StatelessWidget {
                 subtitle: 'Password & security',
                 secondaryAssertionText: 'Settings',
                 colorScheme: colorScheme,
-                onTap: () => context.push('/settings'),
+                onTap: () => context.push(AppRoutePaths.menu),
               ),
             ],
           ),

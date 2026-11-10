@@ -10,10 +10,10 @@ README này giúp thành viên mới chạy dự án, tìm đúng phần code c�
 | --- | --- | --- | --- |
 | Chung | Login, Register, phiên đăng nhập | `features/auth/` | Có code authentication và API |
 | Member 1 | Home Feed, Post Detail, Notifications | `features/feed/` | Đã nối Riverpod → API → MongoDB, có kiểm thử (xem `docs/member1.md`); nút Comment chờ Member 3 |
-| Member 2 | Post Editor, My Posts, Post Insights | `features/posts/` | Có giao diện/khung tích hợp; chưa hoàn thành nghiệp vụ quản lý bài viết |
-| Member 3 | Comments, Liked Posts, Saved Posts | `features/interactions/` | Khung tích hợp |
+| Member 2 | Post Editor, My Posts, Post Insights | `features/posts/` | Đã nối API → MongoDB: tạo/sửa (cùng màn SCR04), xoá, My Posts, Insights; có kiểm thử backend |
+| Member 3 | Comments, Liked Posts, Saved Posts | `features/interactions/` | Đã nối API → MongoDB: bình luận, Liked/Saved Posts; có kiểm thử backend |
 | Member 4 | Search, Friend Requests, Friend List | `features/friends/` | Đã nối Riverpod → API → MongoDB, có kiểm thử |
-| Member 5 | Profile, Edit Profile, Account Settings | `features/profile/` | Có giao diện/điểm tích hợp; các chức năng hồ sơ đầy đủ đang chờ tích hợp |
+| Member 5 | Profile, Edit Profile, Account Settings | `features/profile/` | Đã nối API → MongoDB: xem/sửa hồ sơ (`/api/users`), đổi mật khẩu, đăng xuất; có kiểm thử backend |
 
 **Có file màn hình không đồng nghĩa tính năng đã hoàn thành.** Những file ghi “awaiting integration”, các repository chỉ có interface và provider trả về `null` là khung để thành viên phụ trách phát triển.
 
@@ -66,7 +66,7 @@ PORT=5000
 NODE_ENV=development
 MONGODB_URI=mongodb://127.0.0.1:27017/fb_clone
 MONGODB_DB_NAME=fb_clone
-JWT_SECRET=replace_with_your_local_development_secret
+JWT_SECRET=<chuỗi ngẫu nhiên dài từ 32 ký tự; tạo bằng: node -e "console.log(require('crypto').randomBytes(48).toString('hex'))">
 JWT_EXPIRES_IN=7d
 ```
 
@@ -96,44 +96,8 @@ Lần đầu có thể mất một lúc để biên dịch. Hai terminal backend
 
 Nếu vừa đổi cấu trúc/import hoặc chuyển nhánh, nên dừng Flutter bằng `q` hoặc `Ctrl+C`, rồi chạy lại. Chỉnh UI thông thường có thể dùng `r` để hot reload hoặc `R` để hot restart.
 
-## 4. Thêm dữ liệu demo và thử Member 4
 
-Trong thư mục `backend`:
-
-```powershell
-npm.cmd run seed:member4
-```
-
-Script thêm dữ liệu vào MongoDB của máy đang chạy: **9 tài khoản, 8 bài viết và 6 quan hệ bạn bè**. Trong 8 bài viết có 6 bài công khai, 1 bài riêng tư và 1 bài đã xóa để kiểm tra kết quả tìm kiếm.
-
-Script giữ nguyên dữ liệu hiện có; chạy lại không reset thao tác Accept/Decline/Cancel đã thử. Nếu tài khoản demo bị đổi mật khẩu hoặc trùng tài khoản bên ngoài bộ demo, script sẽ báo lỗi thay vì ghi đè.
-
-| Tài khoản | Email | Số điện thoại |
-| --- | --- | --- |
-| A — Minh Nguyen | `member4.a@example.com` | `0904400001` |
-| B — Minh Pham | `member4.b@example.com` | `0904400002` |
-
-Mật khẩu chung: **`Demo1234!`**. Đăng nhập bằng nút **Log In** thông thường; nút Demo Login/Autofill cũ dùng tài khoản khác.
-
-Tài khoản A ban đầu có:
-
-- Hai bạn bè: Minh Le, Tien Nguyen.
-- Hai lời mời nhận: Ha Pham, Nhi Tran.
-- Hai lời mời gửi: Hoang Le, Quang Le.
-- Chưa kết bạn với tài khoản B, để thử Add Friend.
-
-Cách thử nhanh:
-
-1. Đăng nhập A trong Chrome thường, B trong cửa sổ ẩn danh để tách phiên đăng nhập.
-2. A mở **Search → People**, tìm `Minh Pham`, chọn **Add Friend**.
-3. B mở **Friends → Requests → Received**, chọn **Accept** hoặc **Decline**.
-4. Nếu Accept, cả A và B đều thấy nhau trong Friends. Kéo xuống để làm mới hoặc chờ tối đa khoảng 15 giây.
-5. A mở **Requests → Sent** để thử **Cancel Request** với Hoang Le hoặc Quang Le.
-6. Tìm `Flutter` ở **Search → Posts**. Bài riêng tư của người khác và bài đã xóa không xuất hiện.
-
-Dữ liệu nằm trên MongoDB của laptop đang dùng; nó không tự xuất hiện trên máy thành viên khác khi clone Git.
-
-## 5. Chạy Android và dùng chung backend qua Wi-Fi
+## 4. Chạy Android và dùng chung backend qua Wi-Fi
 
 Địa chỉ API được chọn tại [api_config.dart](frontend/lib/core/config/api_config.dart):
 
@@ -162,7 +126,7 @@ Backend đã lắng nghe trên `0.0.0.0`. Android manifest đã có quyền INTE
 
 Khi demo nhiều điện thoại, tất cả phải trỏ tới cùng một backend để nhìn thấy chung tài khoản, bài viết và quan hệ bạn bè.
 
-## 6. Tìm code ở đâu?
+## 5. Tìm code ở đâu?
 
 ```text
 frontend/
@@ -202,7 +166,7 @@ backend/
 │   ├── services/                   # Xử lý nghiệp vụ
 │   ├── repositories/               # Thư mục dành cho lớp truy cập dữ liệu khi nhóm tách tiếp
 │   └── utils/
-├── scripts/                        # Seed demo, script khởi tạo cũ
+├── scripts/                        # Script khởi tạo/kiểm tra database
 └── tests/
 
 docs/
@@ -214,7 +178,7 @@ docs/
 
 Code backend hiện dùng **MongoDB**, dù `package.json` còn dependency PostgreSQL từ phiên bản trước và `docs/uml/` có schema SQL lịch sử. Không cần cài PostgreSQL để chạy phiên bản này.
 
-## 7. Quy ước tích hợp giữa các thành viên
+## 6. Quy ước tích hợp giữa các thành viên
 
 - Viết code trong feature mình phụ trách; dùng lại model, avatar, API client và session chung khi phù hợp.
 - Gọi API qua `ApiClient` để dùng chung Bearer token và xử lý lỗi. Không kết nối Flutter trực tiếp tới MongoDB.
@@ -228,7 +192,7 @@ Code backend hiện dùng **MongoDB**, dù `package.json` còn dependency Postgr
 
 Member 4 có ba màn hình thật: Search chứa People/Posts, Friend Requests chứa Received/Sent, và Friend List. Không tạo thêm trang kết quả tìm kiếm hoặc tách hai tab lời mời thành hai màn hình.
 
-## 8. Kiểm tra trước khi tạo Pull Request
+## 7. Kiểm tra trước khi tạo Pull Request
 
 Backend, từ thư mục gốc:
 
@@ -261,7 +225,7 @@ git push -u origin feat/memberN-feature-name
 
 Sau đó tạo Pull Request vào `main`, ghi phần đã làm và kết quả kiểm thử để nhóm review. PR Member 4 hiện dùng nhánh `feat/member4-search-friends`. Không commit `.env`, `node_modules`, `build` hoặc cache SDK.
 
-## 9. Lỗi thường gặp
+## 8. Lỗi thường gặp
 
 | Hiện tượng | Cách xử lý |
 | --- | --- |
@@ -270,7 +234,7 @@ Sau đó tạo Pull Request vào `main`, ghi phần đã làm và kết quả ki
 | Lỗi import Flutter/package trong IDE | Chạy `flutter pub get` ở `frontend`; nếu IDE còn báo cũ, chạy **Dart: Restart Analysis Server**. |
 | Flutter yêu cầu symlink support trên Windows | Bật Developer Mode của Windows rồi chạy lại `flutter pub get`. |
 | Báo có package mới sau `flutter pub get` | Đây là thông tin phiên bản; dòng `Got dependencies!` nghĩa là tải dependency thành công. |
-| Tìm kiếm không có dữ liệu | Kiểm tra đã đăng nhập và đang trỏ đúng backend; thêm demo bằng `seed:member4` nếu cần. |
+| Tìm kiếm không có dữ liệu | Kiểm tra đã đăng nhập và đang trỏ đúng backend; đăng ký thêm tài khoản và tạo bài viết để có dữ liệu. |
 | Thấy màn hình “awaiting integration” | Đây là phần chưa được thành viên phụ trách nối nghiệp vụ, không phải lỗi tải dữ liệu. |
 
 Chi tiết endpoint, quy tắc quan hệ bạn bè và giới hạn triển khai: [docs/member4.md](docs/member4.md).

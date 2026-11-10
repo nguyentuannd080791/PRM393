@@ -95,9 +95,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       }
 
       if (mounted) {
+        // Saved: nothing is unsaved any more, so the PopScope guard must not block closing.
+        setState(() => _isDirty = false);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Profile updated.')),
         );
+        await WidgetsBinding.instance.endOfFrame; // let PopScope(canPop: true) rebuild first
+        if (!mounted) return;
         try {
           context.pop();
         } catch (_) {
@@ -203,14 +207,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         ),
         body: Stack(
           children: [
-            const Positioned(
-              top: 0,
-              left: 0,
-              child: Opacity(
-                opacity: 0.0,
-                child: Text('Edit Profile Placeholder'),
-              ),
-            ),
             SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: ConstrainedBox(

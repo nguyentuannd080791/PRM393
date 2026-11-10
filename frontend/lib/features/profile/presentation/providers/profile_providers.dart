@@ -9,7 +9,7 @@ import '../../../friends/providers/friends_provider.dart';
 final currentViewerIdProvider = Provider<String>((ref) {
   final authUser = ref.watch(currentUserProvider);
   if (authUser != null) return authUser.id;
-  return '1';
+  return '';
 });
 
 /// Resolves requested userId ('me' -> viewerId).

@@ -19,10 +19,12 @@ class FeedPost {
     this.commentCount = 0,
     this.likedByMe = false,
     this.savedByMe = false,
+    this.audience = 'public',
   });
   final String id;
   final FeedUser author;
   final String content;
+  final String audience;
   final DateTime createdAt;
   final int likeCount;
   final int commentCount;
@@ -38,6 +40,7 @@ class FeedPost {
     commentCount: json['comment_count'] as int? ?? 0,
     likedByMe: json['liked_by_me'] as bool? ?? false,
     savedByMe: json['saved_by_me'] as bool? ?? false,
+    audience: json['audience'] as String? ?? 'public',
   );
 }
 

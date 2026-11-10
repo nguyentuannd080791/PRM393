@@ -50,6 +50,12 @@ class AuthState {
 class AuthStateNotifier extends Notifier<AuthState> {
   @override
   AuthState build() {
+    // Restore a saved login: show the splash while /auth/me verifies the stored token.
+    final token = ref.read(sessionStorageProvider).getToken();
+    if (token != null && token.isNotEmpty) {
+      Future.microtask(checkSession);
+      return const AuthState(isLoading: true, user: null);
+    }
     return const AuthState(isLoading: false, user: null);
   }
 
@@ -142,17 +148,13 @@ class AuthStateNotifier extends Notifier<AuthState> {
     }
   }
 
-  Future<bool> demoLogin() async {
-    return login('minh.nguyen@example.com', 'Password123!');
-  }
-
   Future<bool> register({
     required String fullName,
-    required String email,
-    String? phone,
+    String? email,
+    required String phone,
     required String password,
-    required DateTime birthday,
-    required String gender,
+    DateTime? birthday,
+    String? gender,
   }) async {
     state = state.copyWith(isLoading: true, errorMessage: () => null);
     try {
