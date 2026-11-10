@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
 import 'package:clone_facebook/features/feed/feed_provider.dart';
 import 'package:clone_facebook/features/feed/feed_repository.dart';
 import 'package:clone_facebook/features/feed/models/feed_models.dart';

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
 
 import 'feed_repository.dart';
 import 'models/feed_models.dart';

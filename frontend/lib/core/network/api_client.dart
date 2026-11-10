@@ -2,7 +2,7 @@ import '../config/api_config.dart';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
 
 import '../storage/session_storage.dart';
 

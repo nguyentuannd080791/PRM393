@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
 import 'package:clone_facebook/features/auth/models/user.dart';
 import 'package:clone_facebook/features/feed/feed_repository.dart';
 import 'package:clone_facebook/features/feed/home_feed_screen.dart';

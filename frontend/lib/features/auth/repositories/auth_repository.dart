@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/models/app_models.dart';
-import '../../core/network/api_client.dart';
-import '../../core/storage/session_storage.dart';
+import '../../../core/models/app_models.dart';
+import '../../../core/network/api_client.dart';
+import '../../../core/storage/session_storage.dart';
 
 class AuthRepository {
   final ApiClient _apiClient;
@@ -84,10 +84,8 @@ class AuthRepository {
       await _tokenStorage.saveUser(user);
       return user;
     } catch (e) {
-      // 401: bad/expired token. 404: the account no longer exists. Either way the saved session is useless.
-      bool invalidSession(int? code) => code == 401 || code == 404;
-      if ((e is ApiException && invalidSession(e.statusCode)) ||
-          (e is DioException && invalidSession(e.response?.statusCode))) {
+      if ((e is ApiException && e.statusCode == 401) ||
+          (e is DioException && e.response?.statusCode == 401)) {
         await _tokenStorage.clearAll();
         return null;
       }
@@ -107,6 +105,35 @@ class AuthRepository {
     final data = response.data['data'];
     final token = data is Map ? data['token'] as String? : null;
     if (token != null) await _tokenStorage.saveToken(token);
+  }
+
+  Future<String> forgotPassword(
+    String identifier, [
+    String newPassword = '',
+  ]) async {
+    final response = await _apiClient.post(
+      '/auth/forgot-password',
+      data: {'identifier': identifier, 'new_password': newPassword},
+    );
+    return response.data['message'] as String? ??
+        'Password updated successfully';
+  }
+
+  Future<String> resetPassword({
+    required String token,
+    required String newPassword,
+    String? email,
+  }) async {
+    final response = await _apiClient.post(
+      '/auth/reset-password',
+      data: {
+        'token': token,
+        'new_password': newPassword,
+        if (email != null && email.isNotEmpty) 'email': email,
+      },
+    );
+    return response.data['message'] as String? ??
+        'Password has been reset successfully.';
   }
 }
 

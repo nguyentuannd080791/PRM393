@@ -7,19 +7,18 @@ import 'package:clone_facebook/core/models/app_models.dart';
 import 'package:clone_facebook/core/theme/app_colors.dart';
 import 'package:clone_facebook/core/theme/app_typography.dart';
 import 'package:clone_facebook/core/widgets/brand_mark.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
-import 'profile_repository.dart';
-import 'presentation/providers/profile_providers.dart';
-import 'presentation/widgets/profile_hero_card.dart';
-import 'presentation/widgets/profile_posts_section.dart';
-import 'presentation/widgets/profile_preferences_card.dart';
-import 'presentation/widgets/profile_shortcuts_card.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
+import '../providers/profile_provider.dart';
+import '../widgets/profile_hero_card.dart';
+import '../widgets/profile_posts_section.dart';
+import '../widgets/profile_preferences_card.dart';
+import '../widgets/profile_shortcuts_card.dart';
 
 /// Screen 13: Profile Screen (scr13_profile)
 /// Minimalist text-first profile screen complying with Mini Social design system.
 /// Features:
 /// - Identity Hero Card with TextAvatar (76dp circular initials over #EAF2FF),
-///   full name, bio (150 chars max), Joined date.
+///   full name, derived @handle, bio (150 chars max), Joined date.
 /// - Stats Row: Posts count, Friends count.
 /// - Action Button: Edit Profile (/profile/edit) for self, friendship action buttons for other users.
 /// - Activity & Shortcuts Card (My Posts, Liked Posts, Saved Posts, Account Settings).
@@ -92,7 +91,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Log Out'),
-        content: const Text('Are you sure you want to log out of Mini Social?'),
+        content: const Text('Are you sure you want to log out of Connect?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),

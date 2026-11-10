@@ -7,8 +7,8 @@ import 'package:clone_facebook/app/route_names.dart';
 import 'package:clone_facebook/core/theme/app_shapes.dart';
 import 'package:clone_facebook/core/theme/app_typography.dart';
 import 'package:clone_facebook/core/widgets/text_avatar.dart';
-import 'package:clone_facebook/features/profile/domain/entities/user_profile.dart';
-import 'package:clone_facebook/features/profile/presentation/widgets/profile_action_button.dart';
+import 'package:clone_facebook/features/profile/models/user_profile.dart';
+import 'package:clone_facebook/features/profile/widgets/profile_action_button.dart';
 
 class ProfileHeroCard extends StatelessWidget {
   final UserModel user;

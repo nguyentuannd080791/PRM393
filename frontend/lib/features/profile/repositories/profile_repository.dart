@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/enums/app_enums.dart';
-import '../../core/models/app_models.dart';
-import '../../core/network/api_client.dart';
-import 'domain/entities/user_profile.dart';
+import '../../../core/enums/app_enums.dart';
+import '../../../core/models/app_models.dart';
+import '../../../core/network/api_client.dart';
+import '../models/user_profile.dart';
 
 class ProfileRepository {
   final ApiClient _apiClient;

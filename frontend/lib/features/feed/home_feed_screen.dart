@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:clone_facebook/app/route_names.dart';
 import 'package:clone_facebook/core/widgets/loading_view.dart';
 import 'package:clone_facebook/core/widgets/user_avatar.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
 import 'package:clone_facebook/features/friends/widgets/friends_ui.dart';
 
 import 'feed_provider.dart';

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:clone_facebook/core/enums/app_enums.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
 import 'package:clone_facebook/features/auth/models/user.dart';
 import 'package:clone_facebook/features/friends/models/friend_request.dart';
 import 'package:clone_facebook/features/friends/models/user_result.dart';
 import 'package:clone_facebook/features/friends/repositories/friends_repository.dart';
 import 'package:clone_facebook/features/friends/repositories/search_repository.dart';
-import 'package:clone_facebook/features/profile/presentation/widgets/profile_action_button.dart';
+import 'package:clone_facebook/features/profile/widgets/profile_action_button.dart';
 
 class SignedInAuth extends AuthStateNotifier {
   @override

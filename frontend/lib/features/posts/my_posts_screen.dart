@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/route_names.dart';
 import '../../core/widgets/loading_view.dart';
-import '../auth/auth_provider.dart';
+import '../auth/providers/auth_provider.dart';
 import '../feed/feed_provider.dart';
 import 'posts_repository.dart';
 
@@ -197,6 +197,18 @@ class _MyPostsScreenState extends ConsumerState<MyPostsScreen> {
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            tooltip: 'Profile',
+            icon: const CircleAvatar(
+              radius: 15,
+              backgroundColor: Color(0xFF1769E0),
+              child: Icon(Icons.person, color: Colors.white, size: 19),
+            ),
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Column(
         children: [
@@ -465,7 +477,7 @@ class _PostCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              _formatTimeAgo(post.createdAt),
+                              '@${post.authorName.toLowerCase().replaceAll(RegExp(r'\s+'), '_')} · ${_formatTimeAgo(post.createdAt)}',
                               style: const TextStyle(
                                 color: Color(0xFF687684),
                                 fontSize: 12,

@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/storage/session_storage.dart';
-import 'auth_repository.dart';
-import 'models/user.dart';
+import '../../../core/storage/session_storage.dart';
+import '../repositories/auth_repository.dart';
+import '../models/user.dart';
 
 /// Immutable state representing authentication status and lockout state.
 class AuthState {

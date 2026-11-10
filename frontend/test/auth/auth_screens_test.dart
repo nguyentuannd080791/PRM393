@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
-import 'package:clone_facebook/features/auth/login_screen.dart';
-import 'package:clone_facebook/features/auth/register_screen.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
+import 'package:clone_facebook/features/auth/screens/login_screen.dart';
+import 'package:clone_facebook/features/auth/screens/register_screen.dart';
 
 /// Records what the forms submit; no network.
 class RecordingAuth extends AuthStateNotifier {

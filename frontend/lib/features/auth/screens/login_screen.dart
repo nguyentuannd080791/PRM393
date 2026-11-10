@@ -7,7 +7,7 @@ import 'package:clone_facebook/core/theme/app_colors.dart';
 import 'package:clone_facebook/core/theme/app_shapes.dart';
 import 'package:clone_facebook/core/theme/app_typography.dart';
 import 'package:clone_facebook/core/widgets/brand_mark.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
 
 /// Screen 16: Login Screen (scr16_login)
 /// Blank canvas styling (#F8F9FF), MiniSocialBrandMark at top,

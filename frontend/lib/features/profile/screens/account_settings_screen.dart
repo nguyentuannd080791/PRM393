@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:clone_facebook/app/route_names.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
-import 'package:clone_facebook/features/auth/auth_repository.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
+import 'package:clone_facebook/features/auth/repositories/auth_repository.dart';
 import 'package:clone_facebook/features/friends/widgets/friends_ui.dart';
 
 /// SCR15: change password and log out from one page.
@@ -90,12 +90,10 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
     child: TextFormField(
       controller: controller,
       obscureText: true,
-      maxLength: 128,
       enableSuggestions: false,
       autocorrect: false,
       decoration: InputDecoration(
         labelText: label,
-        counterText: '',
         border: const OutlineInputBorder(),
       ),
       validator: (value) => (value ?? '').isEmpty

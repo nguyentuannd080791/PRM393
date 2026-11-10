@@ -5,15 +5,14 @@ import 'package:clone_facebook/core/theme/app_colors.dart';
 import 'package:clone_facebook/core/theme/app_shapes.dart';
 import 'package:clone_facebook/core/theme/app_typography.dart';
 import 'package:clone_facebook/core/widgets/text_avatar.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
-import 'profile_repository.dart';
-import 'presentation/providers/profile_providers.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
+import '../providers/profile_provider.dart';
 
 /// Screen 14: Edit Profile Screen (scr14_edit_profile)
 /// Pushed sub-route with back button.
 /// Features:
 /// - Avatar initials preview (TextAvatar dynamic preview)
-/// - Preview Name & join year
+/// - Preview Name, handle & join year
 /// - Full Name field with character counter and clear button
 /// - Bio field with 150-char counter ("{count}/150 characters")
 /// - Primary Save Button & Secondary Discard Button
@@ -98,7 +97,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         // Saved: nothing is unsaved any more, so the PopScope guard must not block closing.
         setState(() => _isDirty = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Changes saved successfully.')),
+          const SnackBar(content: Text('Profile updated.')),
         );
         await WidgetsBinding.instance.endOfFrame; // let PopScope(canPop: true) rebuild first
         if (!mounted) return;
@@ -162,6 +161,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final user = ref.watch(currentUserProvider);
     final currentName = _nameController.text.trim();
     final displayName = currentName.isNotEmpty ? currentName : (user?.fullName ?? 'User');
+    final derivedHandle = '@${displayName.toLowerCase().replaceAll(RegExp(r'\s+'), '_')}';
     final memberYear = user?.createdAt?.year ?? DateTime.now().year;
 
     return PopScope(
@@ -234,6 +234,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                 size: 64.0,
                                 backgroundColor: colorScheme.primaryContainer,
                                 textColor: colorScheme.onPrimaryContainer,
+                                showOnlineIndicator: true,
                               ),
                               const SizedBox(height: 8),
 
@@ -248,7 +249,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                'Member since $memberYear',
+                                '$derivedHandle • Member since $memberYear',
                                 style: AppTypography.captionSm.copyWith(
                                   color: colorScheme.onSurfaceVariant,
                                 ),
@@ -285,7 +286,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '${_nameController.text.length} / 50',
+                                    '${_nameController.text.length} / 30',
                                     style: AppTypography.captionSm.copyWith(
                                       color: colorScheme.onSurfaceVariant,
                                     ),
@@ -298,7 +299,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                               TextFormField(
                                 key: const Key('edit_name_field'),
                                 controller: _nameController,
-                                maxLength: 50,
+                                maxLength: 30,
                                 style: AppTypography.bodyMd.copyWith(color: colorScheme.onSurface),
                                 decoration: InputDecoration(
                                   counterText: '',

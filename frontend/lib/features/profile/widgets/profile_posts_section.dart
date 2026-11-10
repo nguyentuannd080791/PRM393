@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:clone_facebook/core/models/app_models.dart';
 import 'package:clone_facebook/core/theme/app_colors.dart';
 import 'package:clone_facebook/core/theme/app_typography.dart';
-import 'package:clone_facebook/features/profile/presentation/widgets/profile_post_card.dart';
+import 'package:clone_facebook/features/profile/widgets/profile_post_card.dart';
 
 class ProfilePostsSection extends StatelessWidget {
   final AsyncValue<List<FeedPostView>> postsAsync;

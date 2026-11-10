@@ -5,12 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:clone_facebook/app/route_names.dart';
 import 'package:clone_facebook/core/widgets/app_bottom_nav.dart';
 import 'package:clone_facebook/app/router_refresh_notifier.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
 
 // Auth screens
-import 'package:clone_facebook/features/auth/splash_screen.dart';
-import 'package:clone_facebook/features/auth/login_screen.dart';
-import 'package:clone_facebook/features/auth/register_screen.dart';
+import 'package:clone_facebook/features/auth/screens/splash_screen.dart';
+import 'package:clone_facebook/features/auth/screens/login_screen.dart';
+import 'package:clone_facebook/features/auth/screens/register_screen.dart';
 
 import 'package:clone_facebook/features/feed/home_feed_screen.dart';
 import 'package:clone_facebook/features/friends/screens/friend_list_screen.dart';
@@ -19,7 +19,7 @@ import 'package:clone_facebook/features/friends/screens/friend_requests_screen.d
 
 import 'package:clone_facebook/features/feed/notifications_screen.dart';
 import 'package:clone_facebook/features/feed/post_detail_screen.dart';
-import 'package:clone_facebook/features/profile/account_settings_screen.dart';
+import 'package:clone_facebook/features/profile/screens/account_settings_screen.dart';
 
 import 'package:clone_facebook/features/posts/post_editor_screen.dart';
 import 'package:clone_facebook/features/posts/my_posts_screen.dart';
@@ -27,8 +27,8 @@ import 'package:clone_facebook/features/posts/post_insights_screen.dart';
 import 'package:clone_facebook/features/interactions/comments_screen.dart';
 import 'package:clone_facebook/features/interactions/liked_posts_screen.dart';
 import 'package:clone_facebook/features/interactions/saved_posts_screen.dart';
-import 'package:clone_facebook/features/profile/profile_screen.dart';
-import 'package:clone_facebook/features/profile/edit_profile_screen.dart';
+import 'package:clone_facebook/features/profile/screens/profile_screen.dart';
+import 'package:clone_facebook/features/profile/screens/edit_profile_screen.dart';
 
 // Global Navigator Keys
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');

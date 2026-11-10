@@ -14,7 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:clone_facebook/app/app_router.dart';
 import 'package:clone_facebook/app/route_names.dart';
 import 'package:clone_facebook/features/auth/models/user.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
 import 'package:clone_facebook/features/friends/repositories/search_repository.dart';
 import 'package:clone_facebook/features/friends/models/user_result.dart';
 import 'package:clone_facebook/features/friends/providers/search_provider.dart';

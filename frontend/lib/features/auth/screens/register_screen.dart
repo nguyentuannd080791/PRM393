@@ -6,10 +6,10 @@ import 'package:clone_facebook/core/theme/app_colors.dart';
 import 'package:clone_facebook/core/theme/app_shapes.dart';
 import 'package:clone_facebook/core/theme/app_typography.dart';
 import 'package:clone_facebook/core/widgets/brand_mark.dart';
-import 'package:clone_facebook/features/auth/auth_provider.dart';
-import 'package:clone_facebook/features/auth/presentation/widgets/register_account_fields_section.dart';
-import 'package:clone_facebook/features/auth/presentation/widgets/register_password_fields_section.dart';
-import 'package:clone_facebook/features/auth/presentation/widgets/register_terms_and_submit.dart';
+import 'package:clone_facebook/features/auth/providers/auth_provider.dart';
+import 'package:clone_facebook/features/auth/widgets/register_account_fields_section.dart';
+import 'package:clone_facebook/features/auth/widgets/register_password_fields_section.dart';
+import 'package:clone_facebook/features/auth/widgets/register_terms_and_submit.dart';
 
 /// Screen 17: Register Screen (scr17_register)
 /// Clean canvas styling, MiniSocialBrandMark with active dot,
