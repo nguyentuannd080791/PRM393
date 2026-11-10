@@ -91,6 +91,61 @@ test('Member 4 real MongoDB API workflows', async t => {
     assert.equal(result.data[0].author.password_hash, undefined);
   });
 
+  await t.test('post lists apply audience visibility and return live engagement counts', async () => {
+    await db.getCollection('Reaction').insertOne({
+      _id: 'own-like', id: 'own-like', post_id: 'own', user_id: 'bob', type: 'like',
+    });
+    await db.getCollection('Comment').insertOne({
+      _id: 'own-comment', id: 'own-comment', post_id: 'own', user_id: 'bob',
+      content: 'Nice post', created_at: new Date(),
+    });
+    const ownPosts = await api('alice', 'GET', '/posts/users/alice');
+    assert.equal(ownPosts.status, 200);
+    assert.deepEqual(ownPosts.data.map(post => post.id), ['own']);
+    assert.equal(ownPosts.data[0].likes, 1);
+    assert.equal(ownPosts.data[0].comments, 1);
+    const bobPosts = await api('cara', 'GET', '/posts/users/bob');
+    assert.equal(bobPosts.status, 200);
+    assert.deepEqual(bobPosts.data.map(post => post.id), ['media', 'public']);
+    assert.equal((await api('alice', 'GET', '/posts/users/missing')).status, 404);
+  });
+
+  await t.test('post CRUD and insights are authenticated and owner-only', async () => {
+    const created = await api('alice', 'POST', '/posts', {
+      content: 'New post from My Posts', audience: 'public',
+    });
+    assert.equal(created.status, 201);
+    const createdId = created.data.id;
+    assert.equal(created.data.content, 'New post from My Posts');
+    assert.equal((await api('bob', 'PUT', `/posts/${createdId}`, { content: 'forged' })).status, 403);
+    assert.equal((await api('alice', 'PUT', `/posts/${createdId}`, { content: 'Updated from My Posts' })).data.content, 'Updated from My Posts');
+    assert.equal((await api('bob', 'GET', `/posts/${createdId}/insights`)).status, 403);
+    await db.getCollection('Reaction').insertOne({
+      _id: `${createdId}-reaction`, id: `${createdId}-reaction`,
+      post_id: createdId, user_id: 'bob', type: 'like', created_at: new Date(),
+    });
+    await db.getCollection('Comment').insertOne({
+      _id: `${createdId}-comment`, id: `${createdId}-comment`,
+      post_id: createdId, author_id: 'cara', content: 'Looks good!',
+      created_at: new Date(),
+    });
+    const insights = await api('alice', 'GET', `/posts/${createdId}/insights`);
+    assert.equal(insights.data.post_id, createdId);
+    assert.equal(insights.data.content, 'Updated from My Posts');
+    assert.equal(insights.data.author.full_name, 'Minh Alice');
+    assert.equal(insights.data.likes, 1);
+    assert.equal(insights.data.comments, 1);
+    assert.equal(insights.data.engagement, 2);
+    assert.deepEqual(
+      insights.data.recent_activity.map(activity => [activity.actor_name, activity.action]).sort(),
+      [['Cara Nguyen', 'commented'], ['Minh Bob', 'liked']],
+    );
+    assert.equal((await api('bob', 'DELETE', `/posts/${createdId}`)).status, 403);
+    assert.equal((await api('alice', 'DELETE', `/posts/${createdId}`)).status, 200);
+    assert.equal((await api('alice', 'GET', '/posts/users/alice')).data.some(post => post.id === createdId), false);
+    assert.equal((await api('alice', 'POST', '/posts', { content: '   ' })).status, 400);
+  });
+
   let ab;
   await t.test('send saves a real request, derives sender from JWT, rejects self/invalid/missing users', async () => {
     assert.equal((await send('alice', 'alice')).status, 400);

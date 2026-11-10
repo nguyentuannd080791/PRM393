@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:clone_facebook/app/route_names.dart';
 
-import '../repositories/search_repository.dart';
 import '../models/user_result.dart';
 import '../providers/search_provider.dart';
 import '../widgets/friends_ui.dart';
@@ -70,8 +69,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             SocialSegments(
               labels: const ['People', 'Posts'],
               selected: state.kind.index,
-              onSelected: (index) =>
-                  notifier.selectKind(SearchKind.values[index]),
+              onSelected: (index) {
+                if (index == SearchKind.posts.index &&
+                    state.query.trim().isEmpty) {
+                  context.push(AppRoutePaths.myPostsPath('me'));
+                  return;
+                }
+                notifier.selectKind(SearchKind.values[index]);
+              },
             ),
             const SizedBox(height: 20),
             if (state.query.trim().isEmpty)
@@ -142,12 +147,11 @@ class _PostResult extends ConsumerWidget {
   final SearchPost post;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final detailPath = ref.watch(postDetailPathBuilderProvider);
     return SocialCard(
       child: InkWell(
-        onTap: detailPath == null
-            ? null
-            : () => context.push(detailPath(post.id)),
+        onTap: () => context.push(
+          '${AppRoutePaths.myPostsPath(post.author.id)}?name=${Uri.encodeComponent(post.author.name)}',
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
