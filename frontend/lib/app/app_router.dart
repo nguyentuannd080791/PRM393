@@ -22,6 +22,8 @@ import 'package:clone_facebook/features/feed/notifications_screen.dart';
 import 'package:clone_facebook/features/profile/account_settings_screen.dart';
 
 import 'package:clone_facebook/features/posts/post_editor_screen.dart';
+import 'package:clone_facebook/features/posts/my_posts_screen.dart';
+import 'package:clone_facebook/features/posts/post_insights_screen.dart';
 import 'package:clone_facebook/features/profile/profile_screen.dart';
 import 'package:clone_facebook/features/profile/edit_profile_screen.dart';
 
@@ -208,6 +210,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const CreatePostPage(),
       ),
       GoRoute(
+        path: AppRoutePaths.postInsights,
+        name: AppRouteNames.postInsights,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => PostInsightsScreen(
+          postId: state.pathParameters['id'] ?? '',
+        ),
+      ),
+      GoRoute(
         path: AppRoutePaths.editPost,
         name: AppRouteNames.editPost,
         parentNavigatorKey: rootNavigatorKey,
@@ -230,6 +240,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final userId = state.pathParameters['userId'] ?? 'me';
           return ProfileScreen(userId: userId);
+        },
+      ),
+      GoRoute(
+        path: AppRoutePaths.myPosts,
+        name: AppRouteNames.myPosts,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) {
+          final userId = state.pathParameters['userId'] ?? 'me';
+          final displayName = state.uri.queryParameters['name'] ?? 'User';
+          return MyPostsScreen(userId: userId, displayName: displayName);
         },
       ),
     ],
