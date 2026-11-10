@@ -1,5 +1,5 @@
 // backend/scripts/init_db.js
-const { connectDb, closePool, testConnection, getCollection } = require('../src/config/db');
+const { connectDb, closePool, testConnection, getCollection } = require('../src/config/database');
 
 const REQUIRED_TABLES = [
   'User',

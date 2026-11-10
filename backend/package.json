@@ -7,7 +7,9 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "db:init": "node scripts/init_db.js",
-    "test": "node tests/api_test_suite.js"
+    "test": "node --test tests/*.test.js",
+    "test:member4": "node --test tests/member4.integration.test.js",
+    "seed:member4": "node scripts/seed_member4.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

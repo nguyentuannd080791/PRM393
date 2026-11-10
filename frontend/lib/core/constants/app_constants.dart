@@ -4,7 +4,8 @@ class AppConstants {
   AppConstants._();
 
   static const String appName = 'Connect';
-  static const String appTagline = 'Connect with friends and the world around you.';
+  static const String appTagline =
+      'Connect with friends and the world around you.';
 
   // Pagination & Debounce
   static const int feedPageLimit = 10;

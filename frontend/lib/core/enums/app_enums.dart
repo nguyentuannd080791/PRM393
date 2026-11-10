@@ -90,9 +90,9 @@ enum FriendshipStatus {
 enum UserRelationshipStatus {
   self,
   friends,
-  pendingSent,     // Viewer sent request to target
+  pendingSent, // Viewer sent request to target
   pendingReceived, // Target sent request to viewer
-  none;            // Not friends, eligible for "Add Friend"
+  none, // Not friends, eligible for "Add Friend"
 }
 
 /// Notification event categories (SRS BR-19, SDD Data Dictionary).

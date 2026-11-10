@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:clone_facebook/core/enums/app_enums.dart';
-import 'package:clone_facebook/core/router/route_names.dart';
+import 'package:clone_facebook/app/route_names.dart';
 import 'package:clone_facebook/features/profile/presentation/providers/profile_providers.dart';
 
 class ProfileActionButton extends ConsumerStatefulWidget {

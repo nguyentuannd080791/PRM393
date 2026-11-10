@@ -1,7 +1,7 @@
 // backend/src/app.js
 const express = require('express');
 const cors = require('cors');
-const errorMiddleware = require('./middlewares/error.middleware');
+const errorMiddleware = require('./middleware/error');
 const apiRouter = require('./routes');
 
 const app = express();

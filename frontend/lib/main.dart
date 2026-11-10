@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:clone_facebook/app.dart';
+import 'package:clone_facebook/app/app.dart';
 import 'package:clone_facebook/core/storage/preferences_provider.dart';
 
 void main() async {

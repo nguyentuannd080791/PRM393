@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:clone_facebook/core/router/route_names.dart';
+import 'package:clone_facebook/app/route_names.dart';
 import 'package:clone_facebook/core/theme/app_colors.dart';
 import 'package:clone_facebook/core/theme/app_shapes.dart';
 import 'package:clone_facebook/core/theme/app_typography.dart';
@@ -143,7 +143,7 @@ class ProfileShortcutsCard extends StatelessWidget {
               Divider(height: 1, color: colorScheme.outlineVariant),
               _buildShortcutTile(
                 icon: Icons.shield_outlined,
-                iconBg: colorScheme.surfaceVariant,
+                iconBg: colorScheme.surfaceContainerHighest,
                 iconColor: colorScheme.onSurfaceVariant,
                 title: 'Account Settings',
                 subtitle: 'Password & security',

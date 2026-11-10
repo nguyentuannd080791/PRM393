@@ -2,8 +2,8 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { getCollection } = require('../config/db');
-const { AppError } = require('../middlewares/error.middleware');
+const { getCollection } = require('../config/database');
+const { AppError } = require('../middleware/error');
 const { MSG } = require('../utils/messages');
 const {
   isValidEmail,

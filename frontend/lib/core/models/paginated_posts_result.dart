@@ -10,6 +10,8 @@ class PaginatedPostsResult extends ListBase<FeedPostView> {
   final int page;
   final int limit;
 
+  bool get hasMore => page < totalPages;
+
   PaginatedPostsResult({
     required this.posts,
     required this.total,

@@ -113,7 +113,7 @@ class ProfilePreferencesCard extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: colorScheme.surfaceVariant,
+            color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(AppShapes.radiusCard),
           ),
           child: Row(

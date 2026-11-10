@@ -30,10 +30,14 @@ class AppFormatters {
       return count.toString();
     } else if (count < 1000000) {
       final double inK = count / 1000.0;
-      return inK >= 10 ? '${inK.toStringAsFixed(0)}K' : '${inK.toStringAsFixed(1)}K';
+      return inK >= 10
+          ? '${inK.toStringAsFixed(0)}K'
+          : '${inK.toStringAsFixed(1)}K';
     } else {
       final double inM = count / 1000000.0;
-      return inM >= 10 ? '${inM.toStringAsFixed(0)}M' : '${inM.toStringAsFixed(1)}M';
+      return inM >= 10
+          ? '${inM.toStringAsFixed(0)}M'
+          : '${inM.toStringAsFixed(1)}M';
     }
   }
 }
