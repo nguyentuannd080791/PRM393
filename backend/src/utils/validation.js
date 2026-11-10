@@ -30,6 +30,15 @@ function isValidPassword(password) {
 }
 
 /**
+ * Validate bio length limit (BR-14: <= 150 characters)
+ */
+function isValidBio(bio) {
+  if (bio === undefined || bio === null) return true;
+  if (typeof bio !== 'string') return false;
+  return bio.length <= 150;
+}
+
+/**
  * Validate user age >= 13 years old per BR-03
  * Avoids UTC timezone day shifts by directly parsing date components for strings.
  * @param {string|Date} birthday - YYYY-MM-DD
@@ -121,8 +130,10 @@ function validateCommentPayload(content) {
  * Validate profile update fields (BR-14)
  */
 function validateProfilePayload(payload) {
-  if (payload.bio !== undefined && payload.bio !== null && payload.bio.length > 150) {
-    return { valid: false, message: 'Bio cannot exceed 150 characters' };
+  if (payload.bio !== undefined && payload.bio !== null) {
+    if (typeof payload.bio !== 'string' || payload.bio.length > 150) {
+      return { valid: false, message: 'Bio cannot exceed 150 characters' };
+    }
   }
   if (payload.full_name !== undefined) {
     if (typeof payload.full_name !== 'string' || payload.full_name.trim().length === 0) {
@@ -142,9 +153,11 @@ function validateProfilePayload(payload) {
 }
 
 module.exports = {
+  PASSWORD_REGEX,
   isValidEmail,
   isValidPhone,
   isValidPassword,
+  isValidBio,
   isAtLeast13YearsOld,
   normalizeGender,
   validatePostPayload,

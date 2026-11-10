@@ -4,8 +4,7 @@ class AppConstants {
   AppConstants._();
 
   static const String appName = 'Connect';
-  static const String appTagline =
-      'Connect with friends and the world around you.';
+  static const String appTagline = 'Connect with friends and the world around you.';
 
   // Pagination & Debounce
   static const int feedPageLimit = 10;
@@ -22,11 +21,8 @@ class AppConstants {
   static const int minimumUserAgeYears = 13;
 
   // Messages (SRS Section III & IV)
-  static const String msgContentUnavailable =
-      'This content is no longer available.';
-  static const String msgGenericError =
-      'Something went wrong. Please try again.';
-  static const String msgNetworkError =
-      'Network error. Please check your connection.';
+  static const String msgContentUnavailable = 'Nội dung này hiện không khả dụng';
+  static const String msgGenericError = 'Something went wrong. Please try again.';
+  static const String msgNetworkError = 'Network error. Please check your connection.';
   static const String msgLoginFailed = 'Invalid email/phone or password.';
 }
